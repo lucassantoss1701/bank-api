@@ -7,17 +7,15 @@ import (
 
 type Transfer struct {
 	ID                 string
-	OwnerID            string
 	OriginAccount      *Account
 	DestinationAccount *Account
 	Amount             int
 	CreatedAt          *time.Time
 }
 
-func NewTransfer(ID string, ownerID string, originAccount *Account, destinationAccount *Account, amount int, createdAt *time.Time) (*Transfer, error) {
+func NewTransfer(ID string, originAccount *Account, destinationAccount *Account, amount int, createdAt *time.Time) (*Transfer, error) {
 	transfer := &Transfer{
 		ID:                 ID,
-		OwnerID:            ownerID,
 		OriginAccount:      originAccount,
 		DestinationAccount: destinationAccount,
 		Amount:             amount,
@@ -37,10 +35,6 @@ func (t *Transfer) isValid() error {
 
 	if t.ID == "" {
 		validationError.Add("ID cannot be empty")
-	}
-
-	if t.OwnerID == "" {
-		validationError.Add("owner cannot be empty")
 	}
 
 	if t.OriginAccount == nil {
@@ -72,10 +66,6 @@ func (t *Transfer) CanTransfer() error {
 		validationError.Add("origin account does not have enough balance")
 	}
 
-	if t.OriginAccount.ID != t.OwnerID {
-		validationError.Add("owner ID cannot be different from ID origin account")
-	}
-
 	if len(validationError.Messages) > 0 {
 		return validationError
 	}
@@ -86,13 +76,13 @@ func (t *Transfer) CanTransfer() error {
 func (t *Transfer) MakeTransfer() error {
 	validationError := &ValidationError{}
 
-	err := t.OriginAccount.setBalance(-t.Amount)
+	err := t.OriginAccount.removeFromBalance(t.Amount)
 	if err != nil {
 		validationError.Add(fmt.Sprintf("error on update balance of origin account: %s", err.Error()))
 		return validationError
 	}
 
-	t.DestinationAccount.setBalance(t.Amount)
+	t.DestinationAccount.addFromBalance(t.Amount)
 
 	return nil
 }
