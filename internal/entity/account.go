@@ -3,8 +3,6 @@ package entity
 import (
 	"errors"
 	"time"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Account struct {
@@ -41,10 +39,6 @@ func NewAccount(ID string, name string, CPF string, secret string, balance int, 
 
 	return account, nil
 
-}
-
-func hash(secret string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(secret), bcrypt.DefaultCost)
 }
 
 func (a *Account) isValid() error {
