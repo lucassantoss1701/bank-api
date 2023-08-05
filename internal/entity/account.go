@@ -85,10 +85,14 @@ func (a *Account) hasSufficientBalance(value int) bool {
 	return a.Balance-value > 0
 }
 
-func (a *Account) setBalance(value int) error {
+func (a *Account) addFromBalance(value int) {
+	a.Balance += value
+}
+
+func (a *Account) removeFromBalance(value int) error {
 	validationError := &ValidationError{}
 
-	a.Balance += value
+	a.Balance -= value
 
 	if a.Balance < 0 {
 		validationError.Add("new balance cannot be minor than 0")
@@ -96,5 +100,4 @@ func (a *Account) setBalance(value int) error {
 	}
 
 	return nil
-
 }

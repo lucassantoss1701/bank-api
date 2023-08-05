@@ -43,11 +43,10 @@ func TestTransfer_NewTranser(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := 50
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, transfer)
@@ -57,40 +56,24 @@ func TestTransfer_NewTranser(t *testing.T) {
 		originAccount := GetBaseDestinationAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
-		ownerID := originAccount.ID
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 		amount := 50
 
-		transfer, err := entity.NewTransfer("", ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer("", originAccount, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, transfer)
 		assert.NotNil(t, err)
 		assert.Equal(t, "ID cannot be empty", err.Error())
 	})
 
-	t.Run("Testing invalid transfer (empty ownerID)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
-		destinationAccount := GetBaseDestinationAccount(t)
-		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
-		ownerID := ""
-		amount := 50
-		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
-
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
-		assert.Nil(t, transfer)
-		assert.NotNil(t, err)
-		assert.Equal(t, "owner cannot be empty", err.Error())
-	})
-
 	t.Run("Testing invalid transfer (nil originAccount)", func(t *testing.T) {
 
 		destinationAccount := GetBaseDestinationAccount(t)
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
-		ownerID := "135f45fd-8df7-42c5-98cd-84568a8f124c"
 		amount := 50
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, nil, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, nil, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, transfer)
 		assert.NotNil(t, err)
@@ -100,11 +83,10 @@ func TestTransfer_NewTranser(t *testing.T) {
 	t.Run("Testing invalid transfer (nil destinationAccount)", func(t *testing.T) {
 		originAccount := GetBaseDestinationAccount(t)
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
-		ownerID := originAccount.ID
 		amount := 50
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, nil, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, nil, amount, &transferCreatedAt)
 		assert.Nil(t, transfer)
 		assert.NotNil(t, err)
 		assert.Equal(t, "destinationAccount cannot be nil", err.Error())
@@ -116,11 +98,10 @@ func TestTransfer_NewTranser(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := -100
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 		assert.Nil(t, transfer)
 		assert.NotNil(t, err)
 		assert.Equal(t, "amount cannot be minor than zero", err.Error())
@@ -132,10 +113,9 @@ func TestTransfer_NewTranser(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := 100
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, nil)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, nil)
 		assert.Nil(t, transfer)
 		assert.NotNil(t, err)
 		assert.Equal(t, "created at cannot be nil", err.Error())
@@ -149,11 +129,10 @@ func TestTransfer_CanTransfer(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := 50
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, transfer)
@@ -171,11 +150,10 @@ func TestTransfer_CanTransfer(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := 50
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, transfer)
@@ -193,11 +171,10 @@ func TestTransfer_CanTransfer(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := 50
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, transfer)
@@ -208,26 +185,6 @@ func TestTransfer_CanTransfer(t *testing.T) {
 
 	})
 
-	t.Run("Testing CanTransfer when transfer cannot be performed (owner ID cannot be different from ID origin account)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
-		destinationAccount := GetBaseDestinationAccount(t)
-
-		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
-
-		ownerID := "6f57a36b-dcba-45d0-9456-5e07eeb2dad2"
-		amount := 50
-		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
-
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
-
-		assert.Nil(t, err)
-		assert.NotNil(t, transfer)
-
-		err = transfer.CanTransfer()
-		assert.NotNil(t, err)
-		assert.Equal(t, "owner ID cannot be different from ID origin account", err.Error())
-
-	})
 }
 
 func TestTransfer_MakeTransfer(t *testing.T) {
@@ -237,11 +194,10 @@ func TestTransfer_MakeTransfer(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := 50
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, transfer)
@@ -262,11 +218,29 @@ func TestTransfer_MakeTransfer(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
-		ownerID := originAccount.ID
 		amount := 5000
 		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer(transferID, ownerID, originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
+
+		assert.Nil(t, err)
+		assert.NotNil(t, transfer)
+
+		err = transfer.MakeTransfer()
+		assert.NotNil(t, err)
+		assert.Equal(t, "error on update balance of origin account: new balance cannot be minor than 0", err.Error())
+	})
+
+	t.Run("Testing MakeTransfer when transfer cannot be performed with success(error on update balance of origin account)", func(t *testing.T) {
+		originAccount := GetBaseDestinationAccount(t)
+		destinationAccount := GetBaseDestinationAccount(t)
+
+		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
+
+		amount := 5000
+		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
+
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, transfer)
