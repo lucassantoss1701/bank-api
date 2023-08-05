@@ -5,3 +5,7 @@ type AccountRepositoryInterface interface {
 	FindByID(ID string) (Account, error)
 	Create(account *Account) (Account, error)
 }
+
+type TransferRepositoryInterface interface {
+	FindByAccountID(AccountID string, limit, offset int) ([]Transfer, error)
+}
