@@ -40,7 +40,7 @@ func TestFindAccountUseCase_Execute(t *testing.T) {
 		offset := 0
 
 		repository := mock.NewAccountRepositoryMock()
-		repository.On("Find", limit, offset).Return([]entity.Account{}, errors.New("error on find orders"))
+		repository.On("Find", limit, offset).Return([]entity.Account{}, errors.New("error on find accounts"))
 
 		findAccountUseCase := usecase.NewFindAccountUseCase(repository)
 
@@ -50,7 +50,7 @@ func TestFindAccountUseCase_Execute(t *testing.T) {
 
 		assert.Empty(t, output)
 		assert.NotNil(t, err)
-		assert.Equal(t, "error on find orders", err.Error())
+		assert.Equal(t, "error on find accounts", err.Error())
 
 	})
 }

@@ -24,6 +24,7 @@ func (f *FindAccountUseCase) Execute(input *FindAccountUseCaseInput) ([]FindAcco
 	var output []FindAccountUseCaseOutput
 
 	for _, account := range accounts {
+
 		accountOutput := FindAccountUseCaseOutput{
 			ID:        account.ID,
 			Name:      account.Name,

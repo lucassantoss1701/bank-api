@@ -18,7 +18,11 @@ func NewAccountRepositoryMock() *AccountRepositoryMock {
 func (a *AccountRepositoryMock) Find(limit, offset int) ([]entity.Account, error) {
 	args := a.Called(limit, offset)
 	return args.Get(0).([]entity.Account), args.Error(1)
+}
 
+func (a *AccountRepositoryMock) FindByID(ID string) (entity.Account, error) {
+	args := a.Called(ID)
+	return args.Get(0).(entity.Account), args.Error(1)
 }
 
 func GetAccounts() []entity.Account {
