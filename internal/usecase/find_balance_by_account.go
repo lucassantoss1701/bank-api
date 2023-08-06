@@ -1,6 +1,9 @@
 package usecase
 
-import "lucassantoss1701/bank/internal/entity"
+import (
+	"context"
+	"lucassantoss1701/bank/internal/entity"
+)
 
 type FindBalanceByAccountUseCase struct {
 	repostiory entity.AccountRepositoryInterface
@@ -12,8 +15,8 @@ func NewFindBalanceByAccountUseCase(repostiory entity.AccountRepositoryInterface
 	}
 }
 
-func (g *FindBalanceByAccountUseCase) Execute(ID string) (*FindBalanceByAccountUseCaseOutput, error) {
-	account, err := g.repostiory.FindByID(ID)
+func (g *FindBalanceByAccountUseCase) Execute(ctx context.Context, ID string) (*FindBalanceByAccountUseCaseOutput, error) {
+	account, err := g.repostiory.FindByID(ctx, ID)
 	if err != nil {
 		return nil, err
 	}
