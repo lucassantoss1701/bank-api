@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"lucassantoss1701/bank/internal/entity"
 	"time"
 )
@@ -15,8 +16,8 @@ func NewFindTransferByAccountUseCase(repostiory entity.TransferRepositoryInterfa
 	}
 }
 
-func (f *FindTransferByAccountUseCase) Execute(input *FindTransferByAccountUseCaseInput) ([]FindTransferByAccountUseCaseOutput, error) {
-	transfererences, err := f.repostiory.FindByAccountID(input.accountID, input.limit, input.offset)
+func (f *FindTransferByAccountUseCase) Execute(ctx context.Context, input *FindTransferByAccountUseCaseInput) ([]FindTransferByAccountUseCaseOutput, error) {
+	transfererences, err := f.repostiory.FindByAccountID(ctx, input.accountID, input.limit, input.offset)
 	if err != nil {
 		return nil, err
 	}

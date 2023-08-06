@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"context"
 	"lucassantoss1701/bank/internal/entity"
 	"time"
 
@@ -15,17 +16,17 @@ func NewAccountRepositoryMock() *AccountRepositoryMock {
 	return &AccountRepositoryMock{}
 }
 
-func (a *AccountRepositoryMock) Find(limit, offset int) ([]entity.Account, error) {
+func (a *AccountRepositoryMock) Find(ctx context.Context, limit, offset int) ([]entity.Account, error) {
 	args := a.Called(limit, offset)
 	return args.Get(0).([]entity.Account), args.Error(1)
 }
 
-func (a *AccountRepositoryMock) FindByID(ID string) (entity.Account, error) {
+func (a *AccountRepositoryMock) FindByID(ctx context.Context, ID string) (entity.Account, error) {
 	args := a.Called(ID)
 	return args.Get(0).(entity.Account), args.Error(1)
 }
 
-func (a *AccountRepositoryMock) Create(account *entity.Account) (entity.Account, error) {
+func (a *AccountRepositoryMock) Create(ctx context.Context, account *entity.Account) (entity.Account, error) {
 	args := a.Called(account)
 	return args.Get(0).(entity.Account), args.Error(1)
 }

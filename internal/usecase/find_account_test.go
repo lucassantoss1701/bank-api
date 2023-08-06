@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"context"
 	"errors"
 	"lucassantoss1701/bank/internal/entity"
 	"lucassantoss1701/bank/internal/entity/mock"
@@ -12,6 +13,7 @@ import (
 
 func TestFindAccountUseCase_Execute(t *testing.T) {
 	t.Run("Testing FindAccountUseCase when have success on find accounts", func(t *testing.T) {
+		ctx := context.Background()
 		limit := 20
 		offset := 0
 
@@ -23,7 +25,7 @@ func TestFindAccountUseCase_Execute(t *testing.T) {
 
 		input := usecase.NewFindAccountUseCaseInput(limit, offset)
 
-		output, err := findAccountUseCase.Execute(input)
+		output, err := findAccountUseCase.Execute(ctx, input)
 
 		assert.Nil(t, err)
 
@@ -36,6 +38,8 @@ func TestFindAccountUseCase_Execute(t *testing.T) {
 	})
 
 	t.Run("Testing FindAccountUseCase when repository return a error", func(t *testing.T) {
+		ctx := context.Background()
+
 		limit := 20
 		offset := 0
 
@@ -46,7 +50,7 @@ func TestFindAccountUseCase_Execute(t *testing.T) {
 
 		input := usecase.NewFindAccountUseCaseInput(limit, offset)
 
-		output, err := findAccountUseCase.Execute(input)
+		output, err := findAccountUseCase.Execute(ctx, input)
 
 		assert.Empty(t, output)
 		assert.NotNil(t, err)

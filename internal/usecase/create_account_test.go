@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"context"
 	"errors"
 	"lucassantoss1701/bank/internal/entity"
 	"lucassantoss1701/bank/internal/entity/mock"
@@ -13,7 +14,9 @@ import (
 )
 
 func TestCreateAccountUseCase_Execute(t *testing.T) {
+
 	t.Run("Testing CreateAccountUseCase when have success on create account", func(t *testing.T) {
+		ctx := context.Background()
 
 		repository := mock.NewAccountRepositoryMock()
 		account := mock.CreateAccount()
@@ -23,7 +26,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 
 		input := usecase.NewCreateAccountUseCaseInput(account.ID, account.Name, account.CPF, account.Secret, account.Balance, *account.CreatedAt)
 
-		output, err := createAccountUseCase.Execute(input)
+		output, err := createAccountUseCase.Execute(ctx, input)
 
 		assert.Nil(t, err)
 
@@ -37,6 +40,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 	})
 
 	t.Run("Testing CreateAccountUseCase when create new account return error", func(t *testing.T) {
+		ctx := context.Background()
 
 		repository := mock.NewAccountRepositoryMock()
 		account := mock.CreateAccount()
@@ -46,7 +50,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 
 		input := usecase.NewCreateAccountUseCaseInput("", account.Name, account.CPF, account.Secret, account.Balance, *account.CreatedAt)
 
-		output, err := createAccountUseCase.Execute(input)
+		output, err := createAccountUseCase.Execute(ctx, input)
 
 		assert.Nil(t, output)
 
@@ -56,6 +60,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 	})
 
 	t.Run("Testing CreateAccountUseCase when repository return error", func(t *testing.T) {
+		ctx := context.Background()
 
 		repository := mock.NewAccountRepositoryMock()
 		account := mock.CreateAccount()
@@ -65,7 +70,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 
 		input := usecase.NewCreateAccountUseCaseInput(account.ID, account.Name, account.CPF, account.Secret, account.Balance, *account.CreatedAt)
 
-		output, err := createAccountUseCase.Execute(input)
+		output, err := createAccountUseCase.Execute(ctx, input)
 
 		assert.Nil(t, output)
 

@@ -1,6 +1,7 @@
 package mock
 
 import (
+	"context"
 	"lucassantoss1701/bank/internal/entity"
 	"time"
 
@@ -15,8 +16,8 @@ func NewTransferRepositoryMock() *TransferRepositoryMock {
 	return &TransferRepositoryMock{}
 }
 
-func (a *TransferRepositoryMock) FindByAccountID(AccountID string, limit, offset int) ([]entity.Transfer, error) {
-	args := a.Called(AccountID, limit, offset)
+func (a *TransferRepositoryMock) FindByAccountID(ctx context.Context, accountID string, limit, offset int) ([]entity.Transfer, error) {
+	args := a.Called(ctx, accountID, limit, offset)
 	return args.Get(0).([]entity.Transfer), args.Error(1)
 }
 

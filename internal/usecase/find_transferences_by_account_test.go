@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"context"
 	"errors"
 	"lucassantoss1701/bank/internal/entity"
 	"lucassantoss1701/bank/internal/entity/mock"
@@ -12,20 +13,20 @@ import (
 
 func TestFindTransferByAccountUseCase_Execute(t *testing.T) {
 	t.Run("Testing FindTransferByAccountUseCase when have success on find balance", func(t *testing.T) {
-
-		AccountID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
+		ctx := context.Background()
+		accountID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
 		limit := 20
 		offset := 0
 
 		repository := mock.NewTransferRepositoryMock()
 		transferences := mock.GetTransfererences()
-		repository.On("FindByAccountID", AccountID, limit, offset).Return(transferences, nil)
+		repository.On("FindByAccountID", ctx, accountID, limit, offset).Return(transferences, nil)
 
 		findTransferByAccountUseCase := usecase.NewFindTransferByAccountUseCase(repository)
 
-		input := usecase.NewFindTransferByAccountUseCaseInput(AccountID, limit, offset)
+		input := usecase.NewFindTransferByAccountUseCaseInput(accountID, limit, offset)
 
-		output, err := findTransferByAccountUseCase.Execute(input)
+		output, err := findTransferByAccountUseCase.Execute(ctx, input)
 
 		assert.Nil(t, err)
 		assert.NotNil(t, output)
@@ -40,19 +41,20 @@ func TestFindTransferByAccountUseCase_Execute(t *testing.T) {
 	})
 
 	t.Run("Testing FindTransferByAccountUseCase when repository return a error", func(t *testing.T) {
+		ctx := context.Background()
 
-		AccountID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
+		accountID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
 		limit := 20
 		offset := 0
 
 		repository := mock.NewTransferRepositoryMock()
-		repository.On("FindByAccountID", AccountID, limit, offset).Return([]entity.Transfer{}, errors.New("error on find transferecenes by account ID"))
+		repository.On("FindByAccountID", ctx, accountID, limit, offset).Return([]entity.Transfer{}, errors.New("error on find transferecenes by account ID"))
 
 		findTransferByAccountUseCase := usecase.NewFindTransferByAccountUseCase(repository)
 
-		input := usecase.NewFindTransferByAccountUseCaseInput(AccountID, limit, offset)
+		input := usecase.NewFindTransferByAccountUseCaseInput(accountID, limit, offset)
 
-		output, err := findTransferByAccountUseCase.Execute(input)
+		output, err := findTransferByAccountUseCase.Execute(ctx, input)
 
 		assert.Nil(t, output)
 

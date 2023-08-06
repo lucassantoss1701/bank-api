@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"lucassantoss1701/bank/internal/entity"
 	"time"
 )
@@ -15,8 +16,8 @@ func NewFindAccountUseCase(repostiory entity.AccountRepositoryInterface) *FindAc
 	}
 }
 
-func (f *FindAccountUseCase) Execute(input *FindAccountUseCaseInput) ([]FindAccountUseCaseOutput, error) {
-	accounts, err := f.repostiory.Find(input.limit, input.offset)
+func (f *FindAccountUseCase) Execute(ctx context.Context, input *FindAccountUseCaseInput) ([]FindAccountUseCaseOutput, error) {
+	accounts, err := f.repostiory.Find(ctx, input.limit, input.offset)
 	if err != nil {
 		return nil, err
 	}

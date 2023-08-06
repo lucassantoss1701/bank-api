@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"lucassantoss1701/bank/internal/entity"
 	"time"
 )
@@ -15,13 +16,13 @@ func NewCreateAccountUseCase(repostiory entity.AccountRepositoryInterface) *Crea
 	}
 }
 
-func (c *CreateAccountUseCase) Execute(input *CreateAccountUseCaseInput) (*CreateAccountUseCaseOutput, error) {
+func (c *CreateAccountUseCase) Execute(ctx context.Context, input *CreateAccountUseCaseInput) (*CreateAccountUseCaseOutput, error) {
 	account, err := entity.NewAccount(input.id, input.name, input.cpf, input.secret, input.balance, input.createdAt)
 	if err != nil {
 		return nil, err
 	}
 
-	createdAccount, err := c.repostiory.Create(account)
+	createdAccount, err := c.repostiory.Create(ctx, account)
 	if err != nil {
 		return nil, err
 	}

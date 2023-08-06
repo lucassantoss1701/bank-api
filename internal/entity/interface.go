@@ -1,11 +1,13 @@
 package entity
 
+import "context"
+
 type AccountRepositoryInterface interface {
-	Find(limit, offset int) ([]Account, error)
-	FindByID(ID string) (Account, error)
-	Create(account *Account) (Account, error)
+	Find(ctx context.Context, limit, offset int) ([]Account, error)
+	FindByID(ctx context.Context, ID string) (Account, error)
+	Create(ctx context.Context, account *Account) (Account, error)
 }
 
 type TransferRepositoryInterface interface {
-	FindByAccountID(AccountID string, limit, offset int) ([]Transfer, error)
+	FindByAccountID(ctx context.Context, AccountID string, limit, offset int) ([]Transfer, error)
 }
