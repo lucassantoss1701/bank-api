@@ -7,10 +7,10 @@ import (
 )
 
 type FindTransferByAccountUseCase struct {
-	repostiory entity.TransferRepositoryInterface
+	repostiory entity.TransferRepository
 }
 
-func NewFindTransferByAccountUseCase(repostiory entity.TransferRepositoryInterface) *FindTransferByAccountUseCase {
+func NewFindTransferByAccountUseCase(repostiory entity.TransferRepository) *FindTransferByAccountUseCase {
 	return &FindTransferByAccountUseCase{
 		repostiory: repostiory,
 	}

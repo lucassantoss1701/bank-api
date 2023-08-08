@@ -19,7 +19,7 @@ func TestFindAccountUseCase_Execute(t *testing.T) {
 
 		repository := mock.NewAccountRepositoryMock()
 		accounts := mock.GetAccounts()
-		repository.On("Find", limit, offset).Return(accounts, nil)
+		repository.On("Find", ctx, limit, offset).Return(accounts, nil)
 
 		findAccountUseCase := usecase.NewFindAccountUseCase(repository)
 
@@ -37,14 +37,14 @@ func TestFindAccountUseCase_Execute(t *testing.T) {
 
 	})
 
-	t.Run("Testing FindAccountUseCase when repository return a error", func(t *testing.T) {
+	t.Run("Testing FindAccountUseCase when repository returns an error", func(t *testing.T) {
 		ctx := context.Background()
 
 		limit := 20
 		offset := 0
 
 		repository := mock.NewAccountRepositoryMock()
-		repository.On("Find", limit, offset).Return([]entity.Account{}, errors.New("error on find accounts"))
+		repository.On("Find", ctx, limit, offset).Return([]entity.Account{}, errors.New("error on find accounts"))
 
 		findAccountUseCase := usecase.NewFindAccountUseCase(repository)
 

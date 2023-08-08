@@ -20,7 +20,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 
 		repository := mock.NewAccountRepositoryMock()
 		account := mock.CreateAccount()
-		repository.On("Create", testify.AnythingOfTypeArgument("*entity.Account")).Return(account, nil)
+		repository.On("Create", ctx, testify.AnythingOfTypeArgument("*entity.Account")).Return(account, nil)
 
 		createAccountUseCase := usecase.NewCreateAccountUseCase(repository)
 
@@ -44,7 +44,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 
 		repository := mock.NewAccountRepositoryMock()
 		account := mock.CreateAccount()
-		repository.On("Create", testify.AnythingOfTypeArgument("*entity.Account")).Return(account, nil)
+		repository.On("Create", ctx, testify.AnythingOfTypeArgument("*entity.Account")).Return(account, nil)
 
 		createAccountUseCase := usecase.NewCreateAccountUseCase(repository)
 
@@ -64,7 +64,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 
 		repository := mock.NewAccountRepositoryMock()
 		account := mock.CreateAccount()
-		repository.On("Create", testify.AnythingOfTypeArgument("*entity.Account")).Return(entity.Account{}, errors.New("error on create account"))
+		repository.On("Create", ctx, testify.AnythingOfTypeArgument("*entity.Account")).Return(entity.Account{}, errors.New("error on create account"))
 
 		createAccountUseCase := usecase.NewCreateAccountUseCase(repository)
 

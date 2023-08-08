@@ -21,6 +21,11 @@ func (a *TransferRepositoryMock) FindByAccountID(ctx context.Context, accountID 
 	return args.Get(0).([]entity.Transfer), args.Error(1)
 }
 
+func (t *TransferRepositoryMock) Create(ctx context.Context, transfer *entity.Transfer, tx ...entity.TransactionHandler) (entity.Transfer, error) {
+	args := t.Called(ctx, transfer, tx)
+	return args.Get(0).(entity.Transfer), args.Error(1)
+}
+
 func GetTransfererences() []entity.Transfer {
 	date := time.Date(2023, 8, 5, 16, 00, 00, 00, time.UTC)
 

@@ -36,8 +36,8 @@ func GetBaseDestinationAccount(t *testing.T) *entity.Account {
 	return destinationAccount
 }
 
-func TestTransfer_NewTranser(t *testing.T) {
-	t.Run("Testing NewTranser when return a valid transfer", func(t *testing.T) {
+func TestTransfer_NewTransfer(t *testing.T) {
+	t.Run("Testing NewTransfer when returning a valid transfer", func(t *testing.T) {
 		originAccount := GetBaseDestinationAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
@@ -120,71 +120,6 @@ func TestTransfer_NewTranser(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.Equal(t, "created at cannot be nil", err.Error())
 	})
-}
-
-func TestTransfer_CanTransfer(t *testing.T) {
-	t.Run("Testing CanTransfer when transfer can be performed", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
-		destinationAccount := GetBaseDestinationAccount(t)
-
-		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
-
-		amount := 50
-		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
-
-		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
-
-		assert.Nil(t, err)
-		assert.NotNil(t, transfer)
-
-		err = transfer.CanTransfer()
-		assert.Nil(t, err)
-
-	})
-
-	t.Run("Testing CanTransfer when transfer cannot be performed (origin account does not have enough balance)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
-		originAccount.Balance = 49
-
-		destinationAccount := GetBaseDestinationAccount(t)
-
-		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
-
-		amount := 50
-		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
-
-		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
-
-		assert.Nil(t, err)
-		assert.NotNil(t, transfer)
-
-		err = transfer.CanTransfer()
-		assert.NotNil(t, err)
-		assert.Equal(t, "origin account does not have enough balance", err.Error())
-	})
-
-	t.Run("Testing CanTransfer when transfer cannot be performed (origin account does not have enough balance)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
-		originAccount.Balance = 49
-
-		destinationAccount := GetBaseDestinationAccount(t)
-
-		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
-
-		amount := 50
-		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
-
-		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
-
-		assert.Nil(t, err)
-		assert.NotNil(t, transfer)
-
-		err = transfer.CanTransfer()
-		assert.NotNil(t, err)
-		assert.Equal(t, "origin account does not have enough balance", err.Error())
-
-	})
-
 }
 
 func TestTransfer_MakeTransfer(t *testing.T) {

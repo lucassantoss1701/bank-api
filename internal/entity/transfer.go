@@ -60,19 +60,6 @@ func (t *Transfer) isValid() error {
 	return nil
 }
 
-func (t *Transfer) CanTransfer() error {
-	validationError := &ValidationError{}
-	if !t.OriginAccount.hasSufficientBalance(t.Amount) {
-		validationError.Add("origin account does not have enough balance")
-	}
-
-	if len(validationError.Messages) > 0 {
-		return validationError
-	}
-
-	return nil
-}
-
 func (t *Transfer) MakeTransfer() error {
 	validationError := &ValidationError{}
 
