@@ -40,7 +40,7 @@ func TestFindTransferByAccountUseCase_Execute(t *testing.T) {
 
 	})
 
-	t.Run("Testing FindTransferByAccountUseCase when repository return a error", func(t *testing.T) {
+	t.Run("Testing FindTransferByAccountUseCase when repository returns an error", func(t *testing.T) {
 		ctx := context.Background()
 
 		accountID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"

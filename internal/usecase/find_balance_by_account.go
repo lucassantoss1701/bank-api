@@ -6,10 +6,10 @@ import (
 )
 
 type FindBalanceByAccountUseCase struct {
-	repostiory entity.AccountRepositoryInterface
+	repostiory entity.AccountRepository
 }
 
-func NewFindBalanceByAccountUseCase(repostiory entity.AccountRepositoryInterface) *FindBalanceByAccountUseCase {
+func NewFindBalanceByAccountUseCase(repostiory entity.AccountRepository) *FindBalanceByAccountUseCase {
 	return &FindBalanceByAccountUseCase{
 		repostiory: repostiory,
 	}

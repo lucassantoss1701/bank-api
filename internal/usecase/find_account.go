@@ -7,10 +7,10 @@ import (
 )
 
 type FindAccountUseCase struct {
-	repostiory entity.AccountRepositoryInterface
+	repostiory entity.AccountRepository
 }
 
-func NewFindAccountUseCase(repostiory entity.AccountRepositoryInterface) *FindAccountUseCase {
+func NewFindAccountUseCase(repostiory entity.AccountRepository) *FindAccountUseCase {
 	return &FindAccountUseCase{
 		repostiory: repostiory,
 	}

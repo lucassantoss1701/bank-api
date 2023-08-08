@@ -75,10 +75,6 @@ func (a *Account) isValid() error {
 	return nil
 }
 
-func (a *Account) hasSufficientBalance(value int) bool {
-	return a.Balance-value > 0
-}
-
 func (a *Account) addFromBalance(value int) {
 	a.Balance += value
 }

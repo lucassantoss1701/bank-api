@@ -10,7 +10,7 @@ import (
 )
 
 func TestAccount_NewAccount(t *testing.T) {
-	t.Run("Testing NewAccount when return a valid account", func(t *testing.T) {
+	t.Run("Testing NewAccount when  returning a valid account", func(t *testing.T) {
 		ID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
 		name := "lucas"
 		CPF := "35768297090"
@@ -33,7 +33,7 @@ func TestAccount_NewAccount(t *testing.T) {
 
 	})
 
-	t.Run("Testing NewAccount when return a invalid account (too loong secret)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (too loong secret)", func(t *testing.T) {
 		ID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
 		name := "lucas"
 		CPF := "35768297090"
@@ -48,7 +48,7 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.Equal(t, "error on hashing password", err.Error())
 	})
 
-	t.Run("Testing NewAccount when return a invalid account (ID is invalid)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (ID is invalid)", func(t *testing.T) {
 		ID := ""
 		name := "lucas"
 		CPF := "35768297090"
@@ -63,7 +63,7 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.Equal(t, "ID cannot be empty", err.Error())
 	})
 
-	t.Run("Testing NewAccount when return a invalid account (Name is invalid)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (Name is invalid)", func(t *testing.T) {
 		ID := "123"
 		name := ""
 		CPF := "35768297090"
@@ -78,7 +78,7 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.Equal(t, "name cannot be empty", err.Error())
 	})
 
-	t.Run("Testing NewAccount when return a invalid account (CPF is invalid)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (CPF is invalid)", func(t *testing.T) {
 		ID := "123"
 		name := "Lucas"
 		CPF := ""
@@ -93,7 +93,7 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.Equal(t, "CPF cannot be empty", err.Error())
 	})
 
-	t.Run("Testing NewAccount when return a invalid account (Secret is invalid)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (Secret is invalid)", func(t *testing.T) {
 		ID := "123"
 		name := "Lucas"
 		CPF := "35768297090"
@@ -108,7 +108,7 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.Equal(t, "secret cannot be empty", err.Error())
 	})
 
-	t.Run("Testing NewAccount when return a invalid account (Balance is invalid)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (Balance is invalid)", func(t *testing.T) {
 		ID := "123"
 		name := "Lucas"
 		CPF := "35768297090"
@@ -123,7 +123,7 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.Equal(t, "balance cannot be minor than 0", err.Error())
 	})
 
-	t.Run("Testing NewAccount when return a invalid account (CreatedAt is invalid)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (CreatedAt is invalid)", func(t *testing.T) {
 		ID := "123"
 		name := "Lucas"
 		CPF := "35768297090"
