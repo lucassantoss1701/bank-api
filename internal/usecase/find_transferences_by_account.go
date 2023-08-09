@@ -6,25 +6,25 @@ import (
 	"time"
 )
 
-type FindTransferByAccountUseCase struct {
+type FindTransferencesByAccountUseCase struct {
 	repostiory entity.TransferRepository
 }
 
-func NewFindTransferByAccountUseCase(repostiory entity.TransferRepository) *FindTransferByAccountUseCase {
-	return &FindTransferByAccountUseCase{
+func NewFindTransferencesByAccountUseCase(repostiory entity.TransferRepository) *FindTransferencesByAccountUseCase {
+	return &FindTransferencesByAccountUseCase{
 		repostiory: repostiory,
 	}
 }
 
-func (f *FindTransferByAccountUseCase) Execute(ctx context.Context, input *FindTransferByAccountUseCaseInput) ([]FindTransferByAccountUseCaseOutput, error) {
+func (f *FindTransferencesByAccountUseCase) Execute(ctx context.Context, input *FindTransferencesByAccountUseCaseInput) ([]FindTransferencesByAccountUseCaseOutput, error) {
 	transfererences, err := f.repostiory.FindByAccountID(ctx, input.accountID, input.limit, input.offset)
 	if err != nil {
 		return nil, err
 	}
 
-	var output []FindTransferByAccountUseCaseOutput
+	var output []FindTransferencesByAccountUseCaseOutput
 	for _, transfer := range transfererences {
-		transferOutput := &FindTransferByAccountUseCaseOutput{
+		transferOutput := &FindTransferencesByAccountUseCaseOutput{
 			ID:        transfer.ID,
 			Amount:    transfer.Amount,
 			CreatedAt: transfer.CreatedAt,
@@ -43,21 +43,21 @@ func (f *FindTransferByAccountUseCase) Execute(ctx context.Context, input *FindT
 
 }
 
-type FindTransferByAccountUseCaseInput struct {
+type FindTransferencesByAccountUseCaseInput struct {
 	accountID string
 	limit     int
 	offset    int
 }
 
-func NewFindTransferByAccountUseCaseInput(accountID string, limit int, offset int) *FindTransferByAccountUseCaseInput {
-	return &FindTransferByAccountUseCaseInput{
+func NewFindTransferencesByAccountUseCaseInput(accountID string, limit int, offset int) *FindTransferencesByAccountUseCaseInput {
+	return &FindTransferencesByAccountUseCaseInput{
 		accountID: accountID,
 		limit:     limit,
 		offset:    offset,
 	}
 }
 
-type FindTransferByAccountUseCaseOutput struct {
+type FindTransferencesByAccountUseCaseOutput struct {
 	ID                 string
 	DestinationAccount account
 	Amount             int
