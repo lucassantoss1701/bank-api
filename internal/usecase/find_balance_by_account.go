@@ -15,8 +15,8 @@ func NewFindBalanceByAccountUseCase(repostiory entity.AccountRepository) *FindBa
 	}
 }
 
-func (g *FindBalanceByAccountUseCase) Execute(ctx context.Context, ID string) (*FindBalanceByAccountUseCaseOutput, error) {
-	account, err := g.repostiory.FindByID(ctx, ID)
+func (g *FindBalanceByAccountUseCase) Execute(ctx context.Context, input *FindBalanceByAccountUseCaseInput) (*FindBalanceByAccountUseCaseOutput, error) {
+	account, err := g.repostiory.FindByID(ctx, input.id)
 	if err != nil {
 		return nil, err
 	}
@@ -24,6 +24,16 @@ func (g *FindBalanceByAccountUseCase) Execute(ctx context.Context, ID string) (*
 
 }
 
+type FindBalanceByAccountUseCaseInput struct {
+	id string
+}
+
+func NewFindBalanceByAccountUseCaseInput(id string) *FindBalanceByAccountUseCaseInput {
+	return &FindBalanceByAccountUseCaseInput{
+		id: id,
+	}
+}
+
 type FindBalanceByAccountUseCaseOutput struct {
-	Balance int
+	Balance int `json:"balance"`
 }

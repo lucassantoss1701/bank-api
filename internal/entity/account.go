@@ -15,7 +15,6 @@ type Account struct {
 }
 
 func NewAccount(ID string, name string, CPF string, secret string, balance int, createdAt *time.Time) (*Account, error) {
-
 	account := &Account{
 		ID:        ID,
 		Name:      name,
@@ -42,7 +41,7 @@ func NewAccount(ID string, name string, CPF string, secret string, balance int, 
 }
 
 func (a *Account) isValid() error {
-	validationError := &ValidationError{}
+	validationError := &ErrorHandler{}
 
 	if a.ID == "" {
 		validationError.Add("ID cannot be empty")
@@ -69,6 +68,7 @@ func (a *Account) isValid() error {
 	}
 
 	if len(validationError.Messages) > 0 {
+		validationError.TypeError = ENTITY_ERROR
 		return validationError
 	}
 
@@ -80,12 +80,13 @@ func (a *Account) addFromBalance(value int) {
 }
 
 func (a *Account) removeFromBalance(value int) error {
-	validationError := &ValidationError{}
+	validationError := &ErrorHandler{}
 
 	a.Balance -= value
 
 	if a.Balance < 0 {
 		validationError.Add("new balance cannot be minor than 0")
+		validationError.TypeError = ENTITY_ERROR
 		return validationError
 	}
 

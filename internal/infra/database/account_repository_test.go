@@ -14,7 +14,7 @@ import (
 )
 
 func GetSQLFindAccounts() string {
-	return "SELECT id, name, balance FROM accounts LIMIT 10 OFFSET 0"
+	return "SELECT id, name, balance FROM account LIMIT 10 OFFSET 0"
 }
 
 func GetSQLFindAccountByID() string {

@@ -31,7 +31,7 @@ func NewTransfer(ID string, originAccount *Account, destinationAccount *Account,
 }
 
 func (t *Transfer) isValid() error {
-	validationError := &ValidationError{}
+	validationError := &ErrorHandler{}
 
 	if t.ID == "" {
 		validationError.Add("ID cannot be empty")
@@ -54,6 +54,7 @@ func (t *Transfer) isValid() error {
 	}
 
 	if len(validationError.Messages) > 0 {
+		validationError.TypeError = ENTITY_ERROR
 		return validationError
 	}
 
@@ -61,7 +62,7 @@ func (t *Transfer) isValid() error {
 }
 
 func (t *Transfer) MakeTransfer() error {
-	validationError := &ValidationError{}
+	validationError := &ErrorHandler{}
 
 	err := t.OriginAccount.removeFromBalance(t.Amount)
 	if err != nil {
