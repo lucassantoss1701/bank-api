@@ -7,27 +7,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidationError_Add(t *testing.T) {
-	validationError := &entity.ValidationError{}
+func TestErrorHandler_Add(t *testing.T) {
+	errorHandler := &entity.ErrorHandler{}
 
-	assert.Empty(t, validationError.Messages)
+	assert.Empty(t, errorHandler.Messages)
 
-	validationError.Add("Error 1")
-	assert.Equal(t, []string{"Error 1"}, validationError.Messages)
+	errorHandler.Add("Error 1")
+	assert.Equal(t, []string{"Error 1"}, errorHandler.Messages)
 
-	validationError.Add("Error 2")
-	validationError.Add("Error 3")
-	assert.Equal(t, []string{"Error 1", "Error 2", "Error 3"}, validationError.Messages)
+	errorHandler.Add("Error 2")
+	errorHandler.Add("Error 3")
+	assert.Equal(t, []string{"Error 1", "Error 2", "Error 3"}, errorHandler.Messages)
 }
 
-func TestValidationError_Error(t *testing.T) {
-	validationError := &entity.ValidationError{}
-	assert.Empty(t, validationError.Error())
+func TestErrorHandlerError_Error(t *testing.T) {
+	errorHandler := &entity.ErrorHandler{}
+	assert.Empty(t, errorHandler.Error())
 
-	validationError.Add("Error 1")
-	assert.Equal(t, "Error 1", validationError.Error())
+	errorHandler.Add("Error 1")
+	assert.Equal(t, "Error 1", errorHandler.Error())
 
-	validationError.Add("Error 2")
-	validationError.Add("Error 3")
-	assert.Equal(t, "Error 1, Error 2, Error 3", validationError.Error())
+	errorHandler.Add("Error 2")
+	errorHandler.Add("Error 3")
+	assert.Equal(t, "Error 1, Error 2, Error 3", errorHandler.Error())
 }

@@ -8,20 +8,20 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type TransferencesRepositoryMock struct {
+type TransfersRepositoryMock struct {
 	mock.Mock
 }
 
-func NewTransferRepositoryMock() *TransferencesRepositoryMock {
-	return &TransferencesRepositoryMock{}
+func NewTransferRepositoryMock() *TransfersRepositoryMock {
+	return &TransfersRepositoryMock{}
 }
 
-func (a *TransferencesRepositoryMock) FindByAccountID(ctx context.Context, accountID string, limit, offset int) ([]entity.Transfer, error) {
+func (a *TransfersRepositoryMock) FindByAccountID(ctx context.Context, accountID string, limit, offset int) ([]entity.Transfer, error) {
 	args := a.Called(ctx, accountID, limit, offset)
 	return args.Get(0).([]entity.Transfer), args.Error(1)
 }
 
-func (t *TransferencesRepositoryMock) Create(ctx context.Context, transfer *entity.Transfer, tx ...entity.TransactionHandler) (entity.Transfer, error) {
+func (t *TransfersRepositoryMock) Create(ctx context.Context, transfer *entity.Transfer, tx ...entity.TransactionHandler) (entity.Transfer, error) {
 	args := t.Called(ctx, transfer, tx)
 	return args.Get(0).(entity.Transfer), args.Error(1)
 }

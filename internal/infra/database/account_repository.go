@@ -17,7 +17,11 @@ func NewAccountRepository(db *sql.DB) *AccountRepository {
 }
 
 func (r *AccountRepository) Find(ctx context.Context, limit, offset int) ([]entity.Account, error) {
-	query := fmt.Sprintf("SELECT id, name, balance FROM accounts LIMIT %d OFFSET %d", limit, offset)
+	if limit == 0 {
+		limit = 10
+	}
+
+	query := fmt.Sprintf("SELECT id, name, balance FROM account LIMIT %d OFFSET %d", limit, offset)
 
 	rows, err := r.Db.QueryContext(ctx, query)
 	if err != nil {
