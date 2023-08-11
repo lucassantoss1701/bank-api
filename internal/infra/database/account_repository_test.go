@@ -146,7 +146,7 @@ func TestAccountRepository_FindByID(t *testing.T) {
 
 		account, err := accountRepository.FindByID(context.Background(), "2bd765a6-47bd-4731-9eb2-1e65542f4477")
 		assert.NotNil(t, err)
-		assert.Equal(t, "account not found", err.Error())
+		assert.Equal(t, "account not found: 2bd765a6-47bd-4731-9eb2-1e65542f4477", err.Error())
 		assert.Empty(t, account.ID)
 	})
 

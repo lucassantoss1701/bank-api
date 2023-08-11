@@ -14,7 +14,7 @@ import (
 )
 
 func GetSQLFindTransfersByAccountID() string {
-	return regexp.QuoteMeta(`SELECT t.id, t.amount, t.created_at, o.id AS origin_account_id, o.name AS origin_account_name, o.balance AS origin_account_balance, d.id AS destination_account_id, d.name AS destination_account_name, d.balance AS destination_account_balance FROM transfer t INNER JOIN account o ON t.origin_account_id = o.id INNER JOIN account d ON t.destination_account_id = d.id WHERE t.origin_account_id = ? LIMIT ? OFFSET ?`)
+	return regexp.QuoteMeta(`SELECT t.id, t.amount, t.created_at, d.id AS destination_account_id, d.name AS destination_account_name FROM transfer t INNER JOIN account o ON t.origin_account_id = o.id INNER JOIN account d ON t.destination_account_id = d.id WHERE t.origin_account_id = ? LIMIT ? OFFSET ?`)
 }
 
 func GetSQLTransferInsertQuery() string {
@@ -30,7 +30,6 @@ func TestTransferRepository_FindByAccountID(t *testing.T) {
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 		originAccountID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
-		originAccountName := "Lucas"
 
 		destinationAccountID := "d18551d3-cf13-49ec-b1dc-741a1f8715f6"
 		destinationAccountName := "Roger"
@@ -40,12 +39,10 @@ func TestTransferRepository_FindByAccountID(t *testing.T) {
 
 		rows := sqlmock.NewRows([]string{
 			"id", "amount", "created_at",
-			"origin_account_id", "origin_account_name", "origin_account_balance",
-			"destination_account_id", "destination_account_name", "destination_account_balance",
+			"destination_account_id", "destination_account_name",
 		}).AddRow(
 			transferID, 100, time.Now(),
-			originAccountID, originAccountName, 200,
-			destinationAccountID, destinationAccountName, 300,
+			destinationAccountID, destinationAccountName,
 		)
 
 		mock.ExpectQuery(GetSQLFindTransfersByAccountID()).
@@ -57,8 +54,6 @@ func TestTransferRepository_FindByAccountID(t *testing.T) {
 		assert.Len(t, transfers, 1)
 		assert.Equal(t, transferID, transfers[0].ID)
 		assert.Equal(t, 100, transfers[0].Amount)
-		assert.Equal(t, originAccountID, transfers[0].OriginAccount.ID)
-		assert.Equal(t, originAccountName, transfers[0].OriginAccount.Name)
 
 		assert.Equal(t, destinationAccountID, transfers[0].DestinationAccount.ID)
 		assert.Equal(t, destinationAccountName, transfers[0].DestinationAccount.Name)

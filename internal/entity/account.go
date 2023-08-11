@@ -15,6 +15,11 @@ type Account struct {
 }
 
 func NewAccount(ID string, name string, CPF string, secret string, balance int, createdAt *time.Time) (*Account, error) {
+
+	if ID == "" {
+		ID = NewUUID()
+	}
+
 	account := &Account{
 		ID:        ID,
 		Name:      name,
@@ -42,10 +47,6 @@ func NewAccount(ID string, name string, CPF string, secret string, balance int, 
 
 func (a *Account) isValid() error {
 	validationError := &ErrorHandler{}
-
-	if a.ID == "" {
-		validationError.Add("ID cannot be empty")
-	}
 
 	if a.Name == "" {
 		validationError.Add("name cannot be empty")

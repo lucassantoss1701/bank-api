@@ -43,6 +43,7 @@ func TestCreateAccountHandler(t *testing.T) {
 
 		req, err := http.NewRequest("POST", "http://localhost:5000/accounts", bytes.NewReader(dtoJSON))
 		assert.Nil(t, err)
+		req.Header.Set("Authorization", testToken)
 
 		res, err := http.DefaultClient.Do(req)
 		assert.Nil(t, err)

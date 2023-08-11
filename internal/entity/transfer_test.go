@@ -38,7 +38,7 @@ func GetBaseDestinationAccount(t *testing.T) *entity.Account {
 
 func TestTransfer_NewTransfer(t *testing.T) {
 	t.Run("Testing NewTransfer when returning a valid transfer", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
+		originAccount := GetBaseOriginAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
@@ -50,20 +50,27 @@ func TestTransfer_NewTransfer(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.NotNil(t, transfer)
+		assert.Equal(t, amount, amount)
+		assert.Equal(t, transfer.OriginAccount, originAccount)
+		assert.Equal(t, transfer.DestinationAccount, destinationAccount)
 	})
 
-	t.Run("Testing invalid transfer (empty ID)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
+	t.Run("Testing NewTransfer when returning a valid transfer and id is empty", func(t *testing.T) {
+		originAccount := GetBaseOriginAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
-		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
+		transferID := ""
+
 		amount := 50
+		transferCreatedAt := time.Date(2023, 8, 5, 9, 55, 00, 00, time.UTC)
 
-		transfer, err := entity.NewTransfer("", originAccount, destinationAccount, amount, &transferCreatedAt)
+		transfer, err := entity.NewTransfer(transferID, originAccount, destinationAccount, amount, &transferCreatedAt)
 
-		assert.Nil(t, transfer)
-		assert.NotNil(t, err)
-		assert.Equal(t, "ID cannot be empty", err.Error())
+		assert.Nil(t, err)
+		assert.NotNil(t, transfer)
+		assert.Equal(t, amount, amount)
+		assert.Equal(t, transfer.OriginAccount, originAccount)
+		assert.Equal(t, transfer.DestinationAccount, destinationAccount)
 	})
 
 	t.Run("Testing invalid transfer (nil originAccount)", func(t *testing.T) {
@@ -93,7 +100,7 @@ func TestTransfer_NewTransfer(t *testing.T) {
 	})
 
 	t.Run("Testing invalid transfer (negative amount)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
+		originAccount := GetBaseOriginAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
@@ -108,7 +115,7 @@ func TestTransfer_NewTransfer(t *testing.T) {
 	})
 
 	t.Run("Testing invalid transfer (nil createdAt)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
+		originAccount := GetBaseOriginAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
@@ -124,7 +131,7 @@ func TestTransfer_NewTransfer(t *testing.T) {
 
 func TestTransfer_MakeTransfer(t *testing.T) {
 	t.Run("Testing MakeTransfer when transfer can be performed with success", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
+		originAccount := GetBaseOriginAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
@@ -138,7 +145,7 @@ func TestTransfer_MakeTransfer(t *testing.T) {
 		assert.NotNil(t, transfer)
 
 		expectedBalanceAfterTransferOfOriginAccount := originAccount.Balance - 50
-		expectedBalanceAfterTransferOfDestinationAccount := originAccount.Balance + 50
+		expectedBalanceAfterTransferOfDestinationAccount := destinationAccount.Balance + 50
 
 		err = transfer.MakeTransfer()
 		assert.Nil(t, err)
@@ -148,7 +155,7 @@ func TestTransfer_MakeTransfer(t *testing.T) {
 	})
 
 	t.Run("Testing MakeTransfer when transfer cannot be performed with success(error on update balance of origin account)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
+		originAccount := GetBaseOriginAccount(t)
 		destinationAccount := GetBaseDestinationAccount(t)
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
@@ -166,9 +173,9 @@ func TestTransfer_MakeTransfer(t *testing.T) {
 		assert.Equal(t, "error on update balance of origin account: new balance cannot be minor than 0", err.Error())
 	})
 
-	t.Run("Testing MakeTransfer when transfer cannot be performed with success(error on update balance of origin account)", func(t *testing.T) {
-		originAccount := GetBaseDestinationAccount(t)
-		destinationAccount := GetBaseDestinationAccount(t)
+	t.Run("Testing MakeTransfer when transfer cannot be performed with success(origin account is equal destination account)", func(t *testing.T) {
+		originAccount := GetBaseOriginAccount(t)
+		destinationAccount := GetBaseOriginAccount(t)
 
 		transferID := "fc84682a-3045-4bdf-b91c-10be19f89452"
 
@@ -182,7 +189,7 @@ func TestTransfer_MakeTransfer(t *testing.T) {
 
 		err = transfer.MakeTransfer()
 		assert.NotNil(t, err)
-		assert.Equal(t, "error on update balance of origin account: new balance cannot be minor than 0", err.Error())
+		assert.Equal(t, "origin account id must be different to destination account id", err.Error())
 	})
 
 }

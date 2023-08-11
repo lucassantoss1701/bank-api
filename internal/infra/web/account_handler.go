@@ -86,7 +86,7 @@ func (h *WebAccountHandler) Find(w http.ResponseWriter, r *http.Request) {
 		responses.Err(w, err)
 		return
 	}
-	responses.JSON(w, http.StatusOK, output)
+	responses.Success(w, http.StatusOK, output)
 }
 
 func (h *WebAccountHandler) FindBalanceByAccount(w http.ResponseWriter, r *http.Request) {
@@ -103,5 +103,5 @@ func (h *WebAccountHandler) FindBalanceByAccount(w http.ResponseWriter, r *http.
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, output)
+	responses.Success(w, http.StatusOK, output)
 }

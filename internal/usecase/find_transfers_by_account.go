@@ -29,9 +29,8 @@ func (f *FindTransfersByAccountUseCase) Execute(ctx context.Context, input *Find
 			Amount:    transfer.Amount,
 			CreatedAt: transfer.CreatedAt,
 			DestinationAccount: account{
-				ID:        transfer.DestinationAccount.ID,
-				Name:      transfer.DestinationAccount.Name,
-				CreatedAt: transfer.DestinationAccount.CreatedAt,
+				ID:   transfer.DestinationAccount.ID,
+				Name: transfer.DestinationAccount.Name,
 			},
 		}
 
@@ -65,7 +64,6 @@ type FindTransfersByAccountUseCaseOutput struct {
 }
 
 type account struct {
-	ID        string
-	Name      string
-	CreatedAt *time.Time
+	ID   string
+	Name string
 }
