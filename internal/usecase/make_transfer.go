@@ -22,17 +22,17 @@ func NewMakeTransferUseCase(accountRepository entity.AccountRepository, transfer
 
 func (m *MakeTransferUseCase) Execute(ctx context.Context, input *MakeTransferUseCaseInput) (*MakeTransferUseCaseOutput, error) {
 
-	originAccount, err := m.accountRepository.FindByID(ctx, input.originAccountID)
+	originAccount, err := m.accountRepository.FindByID(ctx, input.OriginAccount.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	destinationAccount, err := m.accountRepository.FindByID(ctx, input.destinationAccountID)
+	destinationAccount, err := m.accountRepository.FindByID(ctx, input.DestinationAccount.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	transfer, err := entity.NewTransfer(input.id, &originAccount, &destinationAccount, input.amount, input.createdAt)
+	transfer, err := entity.NewTransfer(input.ID, &originAccount, &destinationAccount, input.Amount, input.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
@@ -78,10 +78,13 @@ func (m *MakeTransferUseCase) Execute(ctx context.Context, input *MakeTransferUs
 		ID:        createdTransfer.ID,
 		Amount:    createdTransfer.Amount,
 		CreatedAt: createdTransfer.CreatedAt,
-		Account: MakeTransferUseCaseAccount{
-			ID:        originAccount.ID,
-			Name:      originAccount.Name,
-			CreatedAt: originAccount.CreatedAt,
+		OriginAccount: MakeTransferUseCaseAccount{
+			ID:   createdTransfer.OriginAccount.ID,
+			Name: createdTransfer.OriginAccount.Name,
+		},
+		DestinationAccount: MakeTransferUseCaseAccount{
+			ID:   destinationAccount.ID,
+			Name: destinationAccount.Name,
 		},
 	}
 
@@ -89,32 +92,40 @@ func (m *MakeTransferUseCase) Execute(ctx context.Context, input *MakeTransferUs
 }
 
 type MakeTransferUseCaseInput struct {
-	id                   string
-	originAccountID      string
-	destinationAccountID string
-	amount               int
-	createdAt            *time.Time
+	ID                 string                          `json:"-"`
+	OriginAccount      MakeTransferUseCaseAccountInput `json:"-"`
+	DestinationAccount MakeTransferUseCaseAccountInput `json:"destination_account"`
+	Amount             int                             `json:"amount"`
+	CreatedAt          *time.Time                      `json:"-"`
 }
 
-func NewMakeTransferUseCaseInput(id string, originAccountID string, destinationAccountID string, amount int, createdAt *time.Time) *MakeTransferUseCaseInput {
+type MakeTransferUseCaseAccountInput struct {
+	ID string
+}
+
+func NewMakeTransferUseCaseInput(ID string, originAccountID string, destinationAccountID string, amount int, createdAt *time.Time) *MakeTransferUseCaseInput {
 	return &MakeTransferUseCaseInput{
-		id:                   id,
-		originAccountID:      originAccountID,
-		destinationAccountID: destinationAccountID,
-		amount:               amount,
-		createdAt:            createdAt,
+		ID: ID,
+		OriginAccount: MakeTransferUseCaseAccountInput{
+			ID: originAccountID,
+		},
+		DestinationAccount: MakeTransferUseCaseAccountInput{
+			ID: destinationAccountID,
+		},
+		Amount:    amount,
+		CreatedAt: createdAt,
 	}
 }
 
 type MakeTransferUseCaseOutput struct {
-	ID        string
-	Amount    int
-	Account   MakeTransferUseCaseAccount
-	CreatedAt *time.Time
+	ID                 string                     `json:"id"`
+	Amount             int                        `json:"amount"`
+	OriginAccount      MakeTransferUseCaseAccount `json:"origin_account"`
+	DestinationAccount MakeTransferUseCaseAccount `json:"destination_account"`
+	CreatedAt          *time.Time                 `json:"created_at"`
 }
 
 type MakeTransferUseCaseAccount struct {
-	ID        string
-	Name      string
-	CreatedAt *time.Time
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }

@@ -48,14 +48,14 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 
 		createAccountUseCase := usecase.NewCreateAccountUseCase(repository)
 
-		input := usecase.NewCreateAccountUseCaseInput("", account.Name, account.CPF, account.Secret, account.Balance, *account.CreatedAt)
+		input := usecase.NewCreateAccountUseCaseInput("", "", account.CPF, account.Secret, account.Balance, *account.CreatedAt)
 
 		output, err := createAccountUseCase.Execute(ctx, input)
 
 		assert.Nil(t, output)
 
 		assert.NotNil(t, err)
-		assert.Equal(t, "ID cannot be empty", err.Error())
+		assert.Equal(t, "name cannot be empty", err.Error())
 
 	})
 

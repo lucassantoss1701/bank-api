@@ -40,6 +40,7 @@ func TestFindBalanceByAccountIDHandler(t *testing.T) {
 
 		req, err := http.NewRequest("GET", fmt.Sprintf("http://localhost:5000/accounts/%s/balance", account.ID), nil)
 		assert.Nil(t, err)
+		req.Header.Set("Authorization", testToken)
 
 		res, err := http.DefaultClient.Do(req)
 		assert.Nil(t, err)

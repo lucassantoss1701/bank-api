@@ -94,9 +94,8 @@ func TestMakeTransferUseCase_Execute(t *testing.T) {
 		assert.Equal(t, amount, output.Amount)
 		assert.Equal(t, createdAt, *output.CreatedAt)
 
-		assert.Equal(t, originAccount.ID, output.Account.ID)
-		assert.Equal(t, originAccount.Name, output.Account.Name)
-		assert.Equal(t, originAccount.CreatedAt, output.Account.CreatedAt)
+		assert.Equal(t, originAccount.ID, output.OriginAccount.ID)
+		assert.Equal(t, originAccount.Name, output.OriginAccount.Name)
 
 		accountRepository.AssertCalled(t, "FindByID", ctx, originAccount.ID)
 		accountRepository.AssertCalled(t, "FindByID", ctx, destinationAccount.ID)

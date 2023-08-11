@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"lucassantoss1701/bank/configs"
 	"lucassantoss1701/bank/internal/infra/web/webserver"
 	"os"
 	"testing"
@@ -15,6 +16,12 @@ import (
 )
 
 var db *sql.DB
+
+const testToken = "eyJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjoiMmJkNzY1YTYtNDdiZC00NzMxLTllYjItMWU2NTU0MmY0NDc3In0.P5e7435tbX8jm1kKktSDdDz072MtytTxmDOslvVfY7A"
+
+func init() {
+	configs.Load()
+}
 
 func GetConnection() *sql.DB {
 	return db

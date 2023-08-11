@@ -14,6 +14,11 @@ type Transfer struct {
 }
 
 func NewTransfer(ID string, originAccount *Account, destinationAccount *Account, amount int, createdAt *time.Time) (*Transfer, error) {
+
+	if ID == "" {
+		ID = NewUUID()
+	}
+
 	transfer := &Transfer{
 		ID:                 ID,
 		OriginAccount:      originAccount,
@@ -32,10 +37,6 @@ func NewTransfer(ID string, originAccount *Account, destinationAccount *Account,
 
 func (t *Transfer) isValid() error {
 	validationError := &ErrorHandler{}
-
-	if t.ID == "" {
-		validationError.Add("ID cannot be empty")
-	}
 
 	if t.OriginAccount == nil {
 		validationError.Add("originAccount cannot be nil")
@@ -63,6 +64,12 @@ func (t *Transfer) isValid() error {
 
 func (t *Transfer) MakeTransfer() error {
 	validationError := &ErrorHandler{}
+
+	if t.OriginAccount.ID == t.DestinationAccount.ID {
+		validationError.Add("origin account id must be different to destination account id")
+		validationError.TypeError = ENTITY_ERROR
+		return validationError
+	}
 
 	err := t.OriginAccount.removeFromBalance(t.Amount)
 	if err != nil {

@@ -32,7 +32,6 @@ func TestFindAccountHandler(t *testing.T) {
 
 		go webserver.Start()
 		time.Sleep(time.Second)
-
 		defer webserver.Stop()
 
 		account := mock.CreateAccount()
@@ -43,6 +42,7 @@ func TestFindAccountHandler(t *testing.T) {
 
 		req, err := http.NewRequest("GET", "http://localhost:5000/accounts?limit=1&offset=0", nil)
 		assert.Nil(t, err)
+		req.Header.Set("Authorization", testToken)
 
 		res, err := http.DefaultClient.Do(req)
 		assert.Nil(t, err)

@@ -20,8 +20,7 @@ func NewTransferRepository(db *sql.DB) *TransferRepository {
 func (r *TransferRepository) FindByAccountID(ctx context.Context, AccountID string, limit, offset int) ([]entity.Transfer, error) {
 	query := `
 		SELECT t.id, t.amount, t.created_at,
-			o.id AS origin_account_id, o.name AS origin_account_name, o.balance AS origin_account_balance,
-			d.id AS destination_account_id, d.name AS destination_account_name, d.balance AS destination_account_balance
+			d.id AS destination_account_id, d.name AS destination_account_name
 		FROM transfer t
 		INNER JOIN account o ON t.origin_account_id = o.id
 		INNER JOIN account d ON t.destination_account_id = d.id
@@ -43,8 +42,7 @@ func (r *TransferRepository) FindByAccountID(ctx context.Context, AccountID stri
 
 		err := rows.Scan(
 			&transfer.ID, &transfer.Amount, &transfer.CreatedAt,
-			&originAccount.ID, &originAccount.Name, &originAccount.Balance,
-			&destinationAccount.ID, &destinationAccount.Name, &destinationAccount.Balance,
+			&destinationAccount.ID, &destinationAccount.Name,
 		)
 		if err != nil {
 			return nil, err

@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"lucassantoss1701/bank/internal/entity"
 )
@@ -48,7 +47,7 @@ func (r *AccountRepository) FindByID(ctx context.Context, ID string) (entity.Acc
 	err := row.Scan(&account.ID, &account.Name, &account.Balance)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return entity.Account{}, errors.New("account not found")
+			return entity.Account{}, fmt.Errorf("account not found: %s", ID)
 		}
 		return entity.Account{}, err
 	}
