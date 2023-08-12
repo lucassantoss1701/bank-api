@@ -51,10 +51,10 @@ func NewFindTransfersByAccountUseCaseInput(accountID string, limit int, offset i
 }
 
 type FindTransfersByAccountUseCaseOutput struct {
-	ID                 string
-	DestinationAccount account
-	Amount             int
-	CreatedAt          *time.Time
+	ID                 string  `json:"id"`
+	DestinationAccount account `json:"destination_account"`
+	Amount             int     `json:"amount"`
+	CreatedAt          string  `json:"created_at"`
 }
 
 type account struct {
@@ -66,7 +66,7 @@ func NewFindTransfersByAccountUseCaseOutput(transfer entity.Transfer) *FindTrans
 	return &FindTransfersByAccountUseCaseOutput{
 		ID:        transfer.ID,
 		Amount:    transfer.Amount,
-		CreatedAt: transfer.CreatedAt,
+		CreatedAt: transfer.CreatedAt.Format(time.RFC3339),
 		DestinationAccount: account{
 			ID:   transfer.DestinationAccount.ID,
 			Name: transfer.DestinationAccount.Name,

@@ -51,15 +51,15 @@ func NewFindAccountUseCaseInput(limit int, offset int) *FindAccountUseCaseInput 
 }
 
 type FindAccountUseCaseOutput struct {
-	ID        string     `json:"id"`
-	Name      string     `json:"name"`
-	CreatedAt *time.Time `json:"created_at"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	CreatedAt string `json:"created_at"`
 }
 
 func NewFindAccountUseCaseOutput(id string, name string, createdAt *time.Time) *FindAccountUseCaseOutput {
 	return &FindAccountUseCaseOutput{
 		ID:        id,
 		Name:      name,
-		CreatedAt: createdAt,
+		CreatedAt: createdAt.Format(time.RFC3339),
 	}
 }

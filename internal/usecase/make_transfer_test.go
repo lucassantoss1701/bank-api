@@ -92,7 +92,7 @@ func TestMakeTransferUseCase_Execute(t *testing.T) {
 
 		assert.Equal(t, transferID, output.ID)
 		assert.Equal(t, amount, output.Amount)
-		assert.Equal(t, createdAt, *output.CreatedAt)
+		assert.Equal(t, createdAt.Format(time.RFC3339), output.CreatedAt)
 
 		assert.Equal(t, originAccount.ID, output.OriginAccount.ID)
 		assert.Equal(t, originAccount.Name, output.OriginAccount.Name)
