@@ -6,10 +6,10 @@ type TypeError string
 
 const (
 	ENTITY_ERROR       TypeError = "error on validate entity"
-	NOT_FOUND_ERROR    TypeError = "not found entity"
+	NOT_FOUND_ERROR    TypeError = "not found"
 	INTERNAL_ERROR     TypeError = "internal error"
-	NOT_ALLOWED_ERROR  TypeError = "not allowed action"
-	UNAUTHORIZED_ERROR TypeError = "unauthorized action"
+	NOT_ALLOWED_ERROR  TypeError = "not allowed"
+	UNAUTHORIZED_ERROR TypeError = "unauthorized"
 	BAD_REQUEST        TypeError = "bad request"
 )
 

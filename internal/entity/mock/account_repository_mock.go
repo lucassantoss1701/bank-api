@@ -36,6 +36,11 @@ func (a *AccountRepositoryMock) UpdateBalance(ctx context.Context, accountID str
 	return args.Get(0).(entity.Account), args.Error(1)
 }
 
+func (a *AccountRepositoryMock) FindByCPF(ctx context.Context, CPF string) (entity.Account, error) {
+	args := a.Called(ctx, CPF)
+	return args.Get(0).(entity.Account), args.Error(1)
+}
+
 func GetAccounts() []entity.Account {
 	date := time.Date(2023, 8, 5, 16, 00, 00, 00, time.UTC)
 	return []entity.Account{

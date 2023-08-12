@@ -7,7 +7,7 @@ import (
 )
 
 func HandleTransferRoutes(webserver *webserver.WebServer, webTransferHandler *web.WebTransferHandler) {
-	webserver.AddHandler("/transfers", http.MethodPost, webTransferHandler.Create)
-	webserver.AddHandler("/transfers", http.MethodGet, webTransferHandler.FindByAccountID)
+	webserver.AddHandler("/transfers", http.MethodPost, webTransferHandler.Create, true)
+	webserver.AddHandler("/transfers", http.MethodGet, webTransferHandler.FindByAccountID, true)
 
 }

@@ -92,3 +92,7 @@ func (a *Account) removeFromBalance(value int) error {
 
 	return nil
 }
+
+func (a *Account) SecretIsCorrect(secret string) bool {
+	return hashIsValid(a.Secret, secret)
+}

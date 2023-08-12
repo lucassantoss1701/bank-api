@@ -12,3 +12,8 @@ func NewUUID() string {
 func hash(value string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)
 }
+
+func hashIsValid(hashedPassowrd string, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassowrd), []byte(password))
+	return err == nil
+}

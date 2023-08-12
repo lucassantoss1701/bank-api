@@ -47,9 +47,9 @@ func (r *AccountRepository) FindByID(ctx context.Context, ID string) (entity.Acc
 	err := row.Scan(&account.ID, &account.Name, &account.Balance)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return entity.Account{}, fmt.Errorf("account not found: %s", ID)
+			return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(err.Error())
 		}
-		return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(err.Error())
+		return entity.Account{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 
 	return account, nil
@@ -83,4 +83,21 @@ func (r *AccountRepository) UpdateBalance(ctx context.Context, accountID string,
 	}
 
 	return r.FindByID(ctx, accountID)
+}
+
+func (r *AccountRepository) FindByCPF(ctx context.Context, CPF string) (entity.Account, error) {
+	query := "SELECT id, secret FROM account WHERE cpf = ?"
+
+	var account entity.Account
+
+	row := r.Db.QueryRowContext(ctx, query, CPF)
+	err := row.Scan(&account.ID, &account.Secret)
+	if err != nil {
+		if err.Error() == sql.ErrNoRows.Error() {
+			return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(err.Error())
+		}
+		return entity.Account{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
+	}
+
+	return account, nil
 }
