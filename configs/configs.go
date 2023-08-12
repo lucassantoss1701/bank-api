@@ -18,19 +18,19 @@ type Config struct {
 
 type database struct {
 	Type string `mapstructure:"DB_TYPE" default:"mysql"`
-	User string `mapstructure:"DB_USER" default:"test"`
-	Pass string `mapstructure:"DB_PASS" default:"test"`
-	Host string `mapstructure:"DB_HOST" default:"bank"`
-	Port string `mapstructure:"DB_PORT" default:"3306"`
+	User string `mapstructure:"DB_USER" default:"root"`
+	Pass string `mapstructure:"DB_PASS" default:"root"`
+	Host string `mapstructure:"DB_HOST" default:"localhost"`
+	Port string `mapstructure:"DB_PORT" default:"3307"`
 	Name string `mapstructure:"DB_NAME" default:"bank"`
 }
 
 type server struct {
-	Host string `mapstructure:"SERVER_HOST" default:"8000"`
+	Host string `mapstructure:"SERVER_HOST" default:":8000"`
 }
 
 type security struct {
-	Secret string `mapstructure:"SECRET" default:""`
+	Secret string `mapstructure:"SECRET" default:"teste"`
 }
 
 func getMappedEnvs(configStruct reflect.Type) []string {
