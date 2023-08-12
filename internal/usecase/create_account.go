@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+type ICreateAccountUseCase interface {
+	Execute(ctx context.Context, input *CreateAccountUseCaseInput) (*CreateAccountUseCaseOutput, error)
+}
+
 type CreateAccountUseCase struct {
 	repostiory entity.AccountRepository
 }
@@ -27,13 +31,7 @@ func (c *CreateAccountUseCase) Execute(ctx context.Context, input *CreateAccount
 		return nil, err
 	}
 
-	return &CreateAccountUseCaseOutput{
-		ID:        createdAccount.ID,
-		Name:      createdAccount.Name,
-		Balance:   createdAccount.Balance,
-		CreatedAt: createdAccount.CreatedAt,
-	}, nil
-
+	return NewCreateAccountUseCaseOutput(createdAccount.ID, createdAccount.Name, createdAccount.Balance, createdAccount.CreatedAt), nil
 }
 
 type CreateAccountUseCaseInput struct {
@@ -61,4 +59,13 @@ type CreateAccountUseCaseOutput struct {
 	Name      string     `json:"name"`
 	Balance   int        `json:"balance"`
 	CreatedAt *time.Time `json:"create_at"`
+}
+
+func NewCreateAccountUseCaseOutput(ID string, name string, balance int, createdAt *time.Time) *CreateAccountUseCaseOutput {
+	return &CreateAccountUseCaseOutput{
+		ID:        ID,
+		Name:      name,
+		Balance:   balance,
+		CreatedAt: createdAt,
+	}
 }

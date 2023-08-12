@@ -36,6 +36,8 @@ func Err(w http.ResponseWriter, err error) {
 			statusCode = http.StatusUnauthorized
 		case entity.NOT_ALLOWED_ERROR:
 			statusCode = http.StatusMethodNotAllowed
+		case entity.BAD_REQUEST:
+			statusCode = http.StatusBadRequest
 		default:
 			statusCode = http.StatusInternalServerError
 		}

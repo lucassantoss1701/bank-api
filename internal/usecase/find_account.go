@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+type IFindAccountUseCase interface {
+	Execute(ctx context.Context, input *FindAccountUseCaseInput) ([]FindAccountUseCaseOutput, error)
+}
+
 type FindAccountUseCase struct {
 	repostiory entity.AccountRepository
 }
@@ -26,13 +30,9 @@ func (f *FindAccountUseCase) Execute(ctx context.Context, input *FindAccountUseC
 
 	for _, account := range accounts {
 
-		accountOutput := FindAccountUseCaseOutput{
-			ID:        account.ID,
-			Name:      account.Name,
-			CreatedAt: account.CreatedAt,
-		}
+		accountOutput := NewFindAccountUseCaseOutput(account.ID, account.Name, account.CreatedAt)
 
-		output = append(output, accountOutput)
+		output = append(output, *accountOutput)
 	}
 
 	return output, nil
@@ -54,4 +54,12 @@ type FindAccountUseCaseOutput struct {
 	ID        string     `json:"id"`
 	Name      string     `json:"name"`
 	CreatedAt *time.Time `json:"created_at"`
+}
+
+func NewFindAccountUseCaseOutput(id string, name string, createdAt *time.Time) *FindAccountUseCaseOutput {
+	return &FindAccountUseCaseOutput{
+		ID:        id,
+		Name:      name,
+		CreatedAt: createdAt,
+	}
 }

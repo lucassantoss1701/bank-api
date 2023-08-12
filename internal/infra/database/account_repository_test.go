@@ -60,6 +60,36 @@ func TestAccountRepository_Find(t *testing.T) {
 		assert.Equal(t, accounts[1].Secret, "")
 	})
 
+	t.Run("Testing Find when returns two accounts and limit is zero", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.Nil(t, err)
+		defer db.Close()
+
+		accountRepository := database.NewAccountRepository(db)
+
+		rows := sqlmock.NewRows([]string{"id", "name", "balance"}).
+			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "Lucas", 100).
+			AddRow("d18551d3-cf13-49ec-b1dc-741a1f8715f6", "Roger", 200)
+
+		mock.ExpectQuery(GetSQLFindAccounts()).WillReturnRows(rows)
+
+		accounts, err := accountRepository.Find(context.Background(), 0, 0)
+		assert.Nil(t, err)
+		assert.Len(t, accounts, 2)
+
+		assert.Equal(t, accounts[0].ID, "2bd765a6-47bd-4731-9eb2-1e65542f4477")
+		assert.Equal(t, accounts[0].Name, "Lucas")
+		assert.Equal(t, accounts[0].Balance, 100)
+		assert.Equal(t, accounts[0].CPF, "")
+		assert.Equal(t, accounts[0].Secret, "")
+
+		assert.Equal(t, accounts[1].ID, "d18551d3-cf13-49ec-b1dc-741a1f8715f6")
+		assert.Equal(t, accounts[1].Name, "Roger")
+		assert.Equal(t, accounts[1].Balance, 200)
+		assert.Equal(t, accounts[1].CPF, "")
+		assert.Equal(t, accounts[1].Secret, "")
+	})
+
 	t.Run("Testing Find when execute query returns an error", func(t *testing.T) {
 		db, mock, err := sqlmock.New()
 		assert.Nil(t, err)

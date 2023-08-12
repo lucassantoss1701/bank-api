@@ -13,12 +13,16 @@ import (
 )
 
 type WebAccountHandler struct {
-	accountRepostiory entity.AccountRepository
+	createAccount usecase.ICreateAccountUseCase
+	findAccount   usecase.IFindAccountUseCase
+	findBalance   usecase.IFindBalanceByAccountUseCase
 }
 
-func NewWebAccountHandler(accountRepostiory entity.AccountRepository) *WebAccountHandler {
+func NewWebAccountHandler(createAccount usecase.ICreateAccountUseCase, findAccount usecase.IFindAccountUseCase, findBalance usecase.IFindBalanceByAccountUseCase) *WebAccountHandler {
 	return &WebAccountHandler{
-		accountRepostiory: accountRepostiory,
+		createAccount: createAccount,
+		findAccount:   findAccount,
+		findBalance:   findBalance,
 	}
 }
 
@@ -28,26 +32,20 @@ func (h *WebAccountHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var dto usecase.CreateAccountUseCaseInput
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		responses.Err(w, err)
+		responses.Err(w, entity.NewErrorHandler(entity.BAD_REQUEST).Add(err.Error()))
 		return
 	}
 
 	createdAt := time.Now()
 	dto.CreatedAt = &createdAt
 
-	createAccount := usecase.NewCreateAccountUseCase(h.accountRepostiory)
-	output, err := createAccount.Execute(ctx, &dto)
+	output, err := h.createAccount.Execute(ctx, &dto)
 	if err != nil {
 		responses.Err(w, err)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(output)
-	if err != nil {
-		responses.Err(w, err)
-		return
-	}
-
+	responses.Success(w, http.StatusCreated, output)
 }
 
 func (h *WebAccountHandler) Find(w http.ResponseWriter, r *http.Request) {
@@ -56,14 +54,13 @@ func (h *WebAccountHandler) Find(w http.ResponseWriter, r *http.Request) {
 	limit := 0
 	offSet := 0
 
-	findAccounts := usecase.NewFindAccountUseCase(h.accountRepostiory)
 	queryParams := r.URL.Query()
 
 	limitStr := queryParams.Get("limit")
 	if limitStr != "" {
 		limit, err = strconv.Atoi(limitStr)
 		if err != nil {
-			responses.Err(w, err)
+			responses.Err(w, entity.NewErrorHandler(entity.BAD_REQUEST).Add(err.Error()))
 			return
 		}
 		if limit == 0 {
@@ -75,13 +72,13 @@ func (h *WebAccountHandler) Find(w http.ResponseWriter, r *http.Request) {
 	if offSetStr != "" {
 		offSet, err = strconv.Atoi(offSetStr)
 		if err != nil {
-			responses.Err(w, err)
+			responses.Err(w, entity.NewErrorHandler(entity.BAD_REQUEST).Add(err.Error()))
 			return
 		}
 	}
 
 	input := usecase.NewFindAccountUseCaseInput(limit, offSet)
-	output, err := findAccounts.Execute(ctx, input)
+	output, err := h.findAccount.Execute(ctx, input)
 	if err != nil {
 		responses.Err(w, err)
 		return
@@ -94,10 +91,9 @@ func (h *WebAccountHandler) FindBalanceByAccount(w http.ResponseWriter, r *http.
 	ctx := r.Context()
 
 	accountID := chi.URLParam(r, "account_id")
-	findBalance := usecase.NewFindBalanceByAccountUseCase(h.accountRepostiory)
 
 	input := usecase.NewFindBalanceByAccountUseCaseInput(accountID)
-	output, err := findBalance.Execute(ctx, input)
+	output, err := h.findBalance.Execute(ctx, input)
 	if err != nil {
 		responses.Err(w, err)
 		return

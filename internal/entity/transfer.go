@@ -36,7 +36,7 @@ func NewTransfer(ID string, originAccount *Account, destinationAccount *Account,
 }
 
 func (t *Transfer) isValid() error {
-	validationError := &ErrorHandler{}
+	validationError := NewErrorHandler(ENTITY_ERROR)
 
 	if t.OriginAccount == nil {
 		validationError.Add("originAccount cannot be nil")
@@ -55,7 +55,6 @@ func (t *Transfer) isValid() error {
 	}
 
 	if len(validationError.Messages) > 0 {
-		validationError.TypeError = ENTITY_ERROR
 		return validationError
 	}
 
@@ -63,11 +62,10 @@ func (t *Transfer) isValid() error {
 }
 
 func (t *Transfer) MakeTransfer() error {
-	validationError := &ErrorHandler{}
+	validationError := NewErrorHandler(ENTITY_ERROR)
 
 	if t.OriginAccount.ID == t.DestinationAccount.ID {
 		validationError.Add("origin account id must be different to destination account id")
-		validationError.TypeError = ENTITY_ERROR
 		return validationError
 	}
 
