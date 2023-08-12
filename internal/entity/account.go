@@ -54,6 +54,8 @@ func (a *Account) isValid() error {
 
 	if a.CPF == "" {
 		validationError.Add("CPF cannot be empty")
+	} else if !isCPF(a.CPF) {
+		validationError.Add("CPF is invalid")
 	}
 
 	if a.Secret == "" {
