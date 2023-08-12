@@ -1,4 +1,4 @@
-DROP TABLE account (
+CREATE TABLE IF NOT EXISTS account (
     id          VARCHAR(36) PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
     cpf         VARCHAR(11) NOT NULL,
