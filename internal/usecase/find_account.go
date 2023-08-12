@@ -30,7 +30,7 @@ func (f *FindAccountUseCase) Execute(ctx context.Context, input *FindAccountUseC
 
 	for _, account := range accounts {
 
-		accountOutput := NewFindAccountUseCaseOutput(account.ID, account.Name, account.CreatedAt)
+		accountOutput := NewFindAccountUseCaseOutput(account.ID, account.Name, account.Balance, account.CreatedAt)
 
 		output = append(output, *accountOutput)
 	}
@@ -53,13 +53,16 @@ func NewFindAccountUseCaseInput(limit int, offset int) *FindAccountUseCaseInput 
 type FindAccountUseCaseOutput struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
+	Balance   int    `json:"balance"`
 	CreatedAt string `json:"created_at"`
 }
 
-func NewFindAccountUseCaseOutput(id string, name string, createdAt *time.Time) *FindAccountUseCaseOutput {
+func NewFindAccountUseCaseOutput(id string, name string, balance int, createdAt *time.Time) *FindAccountUseCaseOutput {
+
 	return &FindAccountUseCaseOutput{
 		ID:        id,
 		Name:      name,
+		Balance:   balance,
 		CreatedAt: createdAt.Format(time.RFC3339),
 	}
 }

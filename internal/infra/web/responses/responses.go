@@ -38,6 +38,8 @@ func Err(w http.ResponseWriter, err error) {
 			statusCode = http.StatusMethodNotAllowed
 		case entity.BAD_REQUEST:
 			statusCode = http.StatusBadRequest
+		case entity.CONFLICT_ERROR:
+			statusCode = http.StatusConflict
 		default:
 			statusCode = http.StatusInternalServerError
 		}

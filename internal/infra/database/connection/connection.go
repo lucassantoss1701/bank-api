@@ -1,4 +1,4 @@
-package database
+package connection
 
 import (
 	"database/sql"
@@ -44,6 +44,6 @@ func Migrate(db *sql.DB) {
 	}
 
 	if err := m.Up(); err != nil {
-		log.Fatal(err)
+		fmt.Println("no change")
 	}
 }
