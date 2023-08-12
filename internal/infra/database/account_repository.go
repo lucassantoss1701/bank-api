@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"lucassantoss1701/bank/internal/entity"
+	"strings"
 )
 
 type AccountRepository struct {
@@ -20,7 +21,7 @@ func (r *AccountRepository) Find(ctx context.Context, limit, offset int) ([]enti
 		limit = 10
 	}
 
-	query := fmt.Sprintf("SELECT id, name, balance FROM account LIMIT %d OFFSET %d", limit, offset)
+	query := fmt.Sprintf("SELECT id, name, balance, created_at FROM account LIMIT %d OFFSET %d", limit, offset)
 
 	rows, err := r.Db.QueryContext(ctx, query)
 	if err != nil {
@@ -31,7 +32,7 @@ func (r *AccountRepository) Find(ctx context.Context, limit, offset int) ([]enti
 	var accounts []entity.Account
 	for rows.Next() {
 		var account entity.Account
-		rows.Scan(&account.ID, &account.Name, &account.Balance)
+		rows.Scan(&account.ID, &account.Name, &account.Balance, &account.CreatedAt)
 		accounts = append(accounts, account)
 	}
 
@@ -61,6 +62,9 @@ func (r *AccountRepository) Create(ctx context.Context, account *entity.Account)
 
 	_, err := r.Db.ExecContext(ctx, query, account.ID, account.Name, account.CPF, account.Secret, account.Balance, account.CreatedAt)
 	if err != nil {
+		if strings.Contains(err.Error(), "1062") {
+			return entity.Account{}, entity.NewErrorHandler(entity.CONFLICT_ERROR).Add(err.Error())
+		}
 		return entity.Account{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 

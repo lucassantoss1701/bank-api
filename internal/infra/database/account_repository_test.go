@@ -14,7 +14,7 @@ import (
 )
 
 func GetSQLFindAccounts() string {
-	return "SELECT id, name, balance FROM account LIMIT 10 OFFSET 0"
+	return "SELECT id, name, balance, created_at FROM account LIMIT 10 OFFSET 0"
 }
 
 func GetSQLFindAccountByID() string {
@@ -41,9 +41,11 @@ func TestAccountRepository_Find(t *testing.T) {
 
 		accountRepository := database.NewAccountRepository(db)
 
-		rows := sqlmock.NewRows([]string{"id", "name", "balance"}).
-			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "Lucas", 100).
-			AddRow("d18551d3-cf13-49ec-b1dc-741a1f8715f6", "Roger", 200)
+		createAt := time.Date(2023, 8, 5, 8, 22, 00, 00, time.UTC)
+
+		rows := sqlmock.NewRows([]string{"id", "name", "balance", "created_at"}).
+			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "Lucas", 100, createAt).
+			AddRow("d18551d3-cf13-49ec-b1dc-741a1f8715f6", "Roger", 200, createAt)
 
 		mock.ExpectQuery(GetSQLFindAccounts()).WillReturnRows(rows)
 
@@ -71,9 +73,11 @@ func TestAccountRepository_Find(t *testing.T) {
 
 		accountRepository := database.NewAccountRepository(db)
 
-		rows := sqlmock.NewRows([]string{"id", "name", "balance"}).
-			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "Lucas", 100).
-			AddRow("d18551d3-cf13-49ec-b1dc-741a1f8715f6", "Roger", 200)
+		createAt := time.Date(2023, 8, 5, 8, 22, 00, 00, time.UTC)
+
+		rows := sqlmock.NewRows([]string{"id", "name", "balance", "created_at"}).
+			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "Lucas", 100, createAt).
+			AddRow("d18551d3-cf13-49ec-b1dc-741a1f8715f6", "Roger", 200, createAt)
 
 		mock.ExpectQuery(GetSQLFindAccounts()).WillReturnRows(rows)
 

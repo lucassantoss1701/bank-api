@@ -8,6 +8,7 @@ const (
 	ENTITY_ERROR       TypeError = "error on validate entity"
 	NOT_FOUND_ERROR    TypeError = "not found"
 	INTERNAL_ERROR     TypeError = "internal error"
+	CONFLICT_ERROR     TypeError = "conflict error"
 	NOT_ALLOWED_ERROR  TypeError = "not allowed"
 	UNAUTHORIZED_ERROR TypeError = "unauthorized"
 	BAD_REQUEST        TypeError = "bad request"

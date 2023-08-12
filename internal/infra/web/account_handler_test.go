@@ -87,7 +87,7 @@ func TestAccountHandler_Find(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/accounts?limit=0&offset=0", nil)
 		recorder := httptest.NewRecorder()
 		var output []usecase.FindAccountUseCaseOutput
-		output = append(output, *usecase.NewFindAccountUseCaseOutput(account.ID, account.Name, account.CreatedAt))
+		output = append(output, *usecase.NewFindAccountUseCaseOutput(account.ID, account.Name, account.Balance, account.CreatedAt))
 		usecase := usecaseMock.NewFindAccountUseCaseMock()
 
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, nil)
@@ -121,7 +121,7 @@ func TestAccountHandler_Find(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/accounts?limit=0&offset=0", nil)
 		recorder := httptest.NewRecorder()
 		var output []usecase.FindAccountUseCaseOutput
-		output = append(output, *usecase.NewFindAccountUseCaseOutput(account.ID, account.Name, account.CreatedAt))
+		output = append(output, *usecase.NewFindAccountUseCaseOutput(account.ID, account.Name, account.Balance, account.CreatedAt))
 		usecase := usecaseMock.NewFindAccountUseCaseMock()
 
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, entity.NewErrorHandler(entity.INTERNAL_ERROR))

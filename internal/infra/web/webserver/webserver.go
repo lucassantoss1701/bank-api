@@ -14,7 +14,6 @@ import (
 	customMiddleware "lucassantoss1701/bank/internal/infra/web/webserver/middleware"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Handler struct {
@@ -98,7 +97,8 @@ func (s *WebServer) Stop() {
 }
 
 func (s *WebServer) startCHI() {
-	s.Router.Use(middleware.Logger)
+	// s.Router.Use(middleware.Logger)
+	s.Router.Use(customMiddleware.Logger)
 
 	s.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		errorHandler := entity.NewErrorHandler(entity.NOT_FOUND_ERROR)

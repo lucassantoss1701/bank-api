@@ -3,6 +3,7 @@ package main
 import (
 	"lucassantoss1701/bank/configs"
 	"lucassantoss1701/bank/internal/infra/database"
+	"lucassantoss1701/bank/internal/infra/database/connection"
 	"lucassantoss1701/bank/internal/infra/web"
 	"lucassantoss1701/bank/internal/infra/web/webserver"
 	"lucassantoss1701/bank/internal/infra/web/webserver/routes"
@@ -18,10 +19,10 @@ func init() {
 }
 
 func main() {
-	db := database.Connect(configs.Get().Database.User, configs.Get().Database.Pass, configs.Get().Database.Host, configs.Get().Database.Port, configs.Get().Database.Name)
+	db := connection.Connect(configs.Get().Database.User, configs.Get().Database.Pass, configs.Get().Database.Host, configs.Get().Database.Port, configs.Get().Database.Name)
 	defer db.Close()
 
-	database.Migrate(db)
+	connection.Migrate(db)
 
 	accountRepository := database.NewAccountRepository(db)
 	transferRepository := database.NewTransferRepository(db)
