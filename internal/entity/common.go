@@ -25,6 +25,7 @@ func hashIsValid(hashedPassowrd string, password string) bool {
 
 var REGEXCPF = regexp.MustCompile(`^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$`)
 
+// could be VO
 func isCPF(value string) bool {
 	const (
 		size = 9
