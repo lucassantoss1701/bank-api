@@ -86,7 +86,7 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.Equal(t, "name cannot be empty", err.Error())
 	})
 
-	t.Run("Testing NewAccount when returning an invalid account (CPF is invalid)", func(t *testing.T) {
+	t.Run("Testing NewAccount when returning an invalid account (CPF is empty)", func(t *testing.T) {
 		ID := "123"
 		name := "Lucas"
 		CPF := ""
@@ -99,6 +99,21 @@ func TestAccount_NewAccount(t *testing.T) {
 		assert.NotNil(t, err)
 
 		assert.Equal(t, "CPF cannot be empty", err.Error())
+	})
+
+	t.Run("Testing NewAccount when returning an invalid account (CPF is invalid)", func(t *testing.T) {
+		ID := "123"
+		name := "Lucas"
+		CPF := "4324234"
+		secret := "4578405"
+		balance := 100
+		createdAt := time.Date(2023, 8, 5, 8, 22, 00, 00, time.UTC)
+		account, err := entity.NewAccount(ID, name, CPF, secret, balance, &createdAt)
+
+		assert.Nil(t, account)
+		assert.NotNil(t, err)
+
+		assert.Equal(t, "CPF is invalid", err.Error())
 	})
 
 	t.Run("Testing NewAccount when returning an invalid account (Secret is invalid)", func(t *testing.T) {
