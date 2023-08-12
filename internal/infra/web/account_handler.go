@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"lucassantoss1701/bank/configs"
 	"lucassantoss1701/bank/internal/entity"
 	"lucassantoss1701/bank/internal/infra/web/responses"
 	"lucassantoss1701/bank/internal/usecase"
@@ -16,13 +17,15 @@ type WebAccountHandler struct {
 	createAccount usecase.ICreateAccountUseCase
 	findAccount   usecase.IFindAccountUseCase
 	findBalance   usecase.IFindBalanceByAccountUseCase
+	login         usecase.ILoginUseCase
 }
 
-func NewWebAccountHandler(createAccount usecase.ICreateAccountUseCase, findAccount usecase.IFindAccountUseCase, findBalance usecase.IFindBalanceByAccountUseCase) *WebAccountHandler {
+func NewWebAccountHandler(createAccount usecase.ICreateAccountUseCase, findAccount usecase.IFindAccountUseCase, findBalance usecase.IFindBalanceByAccountUseCase, login usecase.ILoginUseCase) *WebAccountHandler {
 	return &WebAccountHandler{
 		createAccount: createAccount,
 		findAccount:   findAccount,
 		findBalance:   findBalance,
+		login:         login,
 	}
 }
 
@@ -100,4 +103,27 @@ func (h *WebAccountHandler) FindBalanceByAccount(w http.ResponseWriter, r *http.
 	}
 
 	responses.Success(w, http.StatusOK, output)
+}
+
+func (h *WebAccountHandler) Login(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var dto usecase.LoginUseCaseInput
+	err := json.NewDecoder(r.Body).Decode(&dto)
+	if err != nil {
+		responses.Err(w, entity.NewErrorHandler(entity.BAD_REQUEST).Add(err.Error()))
+		return
+	}
+
+	secretJWT := configs.Get().Security.Secret
+	input := usecase.NewLoginUseCaseInput(dto.CPF, dto.Secret, secretJWT)
+
+	output, err := h.login.Execute(ctx, input)
+	if err != nil {
+		responses.Err(w, err)
+		return
+	}
+
+	responses.Success(w, http.StatusOK, output)
+
 }

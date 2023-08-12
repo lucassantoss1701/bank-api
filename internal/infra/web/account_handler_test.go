@@ -3,6 +3,7 @@ package web_test
 import (
 	"bytes"
 	"encoding/json"
+	"lucassantoss1701/bank/configs"
 	"lucassantoss1701/bank/internal/entity"
 	"lucassantoss1701/bank/internal/entity/mock"
 	"lucassantoss1701/bank/internal/infra/web"
@@ -16,6 +17,9 @@ import (
 	testify "github.com/stretchr/testify/mock"
 )
 
+func init() {
+	configs.Load()
+}
 func TestAccountHandler_Create(t *testing.T) {
 	t.Run("Testing create with success", func(t *testing.T) {
 
@@ -32,7 +36,7 @@ func TestAccountHandler_Create(t *testing.T) {
 		usecase := usecaseMock.NewCreateAccountUseCaseMock()
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, nil)
 
-		handler := web.NewWebAccountHandler(usecase, nil, nil)
+		handler := web.NewWebAccountHandler(usecase, nil, nil, nil)
 
 		handler.Create(recorder, req)
 
@@ -46,7 +50,7 @@ func TestAccountHandler_Create(t *testing.T) {
 		recorder := httptest.NewRecorder()
 
 		usecase := usecaseMock.NewCreateAccountUseCaseMock()
-		handler := web.NewWebAccountHandler(usecase, nil, nil)
+		handler := web.NewWebAccountHandler(usecase, nil, nil, nil)
 
 		handler.Create(recorder, req)
 
@@ -69,7 +73,7 @@ func TestAccountHandler_Create(t *testing.T) {
 
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, entity.NewErrorHandler(entity.INTERNAL_ERROR))
 
-		handler := web.NewWebAccountHandler(usecase, nil, nil)
+		handler := web.NewWebAccountHandler(usecase, nil, nil, nil)
 
 		handler.Create(recorder, req)
 
@@ -88,7 +92,7 @@ func TestAccountHandler_Find(t *testing.T) {
 
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, nil)
 
-		handler := web.NewWebAccountHandler(nil, usecase, nil)
+		handler := web.NewWebAccountHandler(nil, usecase, nil, nil)
 
 		handler.Find(recorder, req)
 		assert.Equal(t, http.StatusOK, recorder.Code)
@@ -98,7 +102,7 @@ func TestAccountHandler_Find(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/accounts?limit=abc&offset=0", nil)
 		recorder := httptest.NewRecorder()
 		usecase := usecaseMock.NewFindAccountUseCaseMock()
-		handler := web.NewWebAccountHandler(nil, usecase, nil)
+		handler := web.NewWebAccountHandler(nil, usecase, nil, nil)
 		handler.Find(recorder, req)
 		assert.Equal(t, http.StatusBadRequest, recorder.Code)
 	})
@@ -107,7 +111,7 @@ func TestAccountHandler_Find(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/accounts?limit=10&offset=dfs", nil)
 		recorder := httptest.NewRecorder()
 		usecase := usecaseMock.NewFindAccountUseCaseMock()
-		handler := web.NewWebAccountHandler(nil, usecase, nil)
+		handler := web.NewWebAccountHandler(nil, usecase, nil, nil)
 		handler.Find(recorder, req)
 		assert.Equal(t, http.StatusBadRequest, recorder.Code)
 	})
@@ -122,7 +126,7 @@ func TestAccountHandler_Find(t *testing.T) {
 
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, entity.NewErrorHandler(entity.INTERNAL_ERROR))
 
-		handler := web.NewWebAccountHandler(nil, usecase, nil)
+		handler := web.NewWebAccountHandler(nil, usecase, nil, nil)
 
 		handler.Find(recorder, req)
 		assert.Equal(t, http.StatusInternalServerError, recorder.Code)
@@ -140,7 +144,7 @@ func TestAccountHandler_FindBalanceByAccount(t *testing.T) {
 
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, nil)
 
-		handler := web.NewWebAccountHandler(nil, nil, usecase)
+		handler := web.NewWebAccountHandler(nil, nil, usecase, nil)
 
 		handler.FindBalanceByAccount(recorder, req)
 		assert.Equal(t, http.StatusOK, recorder.Code)
@@ -155,9 +159,70 @@ func TestAccountHandler_FindBalanceByAccount(t *testing.T) {
 
 		usecase.On("Execute", req.Context(), testify.Anything).Return(output, entity.NewErrorHandler(entity.INTERNAL_ERROR))
 
-		handler := web.NewWebAccountHandler(nil, nil, usecase)
+		handler := web.NewWebAccountHandler(nil, nil, usecase, nil)
 
 		handler.FindBalanceByAccount(recorder, req)
+		assert.Equal(t, http.StatusInternalServerError, recorder.Code)
+	})
+}
+
+func TestAccountHandler_Login(t *testing.T) {
+	t.Run("Testing Login with success", func(t *testing.T) {
+
+		account := mock.CreateAccount()
+
+		input := usecase.NewLoginUseCaseInput(account.CPF, account.Secret, "")
+
+		jsonData, _ := json.Marshal(input)
+		req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonData))
+
+		recorder := httptest.NewRecorder()
+
+		output := usecase.NewLoginUseCaseOutput(&account, "")
+
+		usecase := usecaseMock.NewLoginUseCaseMock()
+		usecase.On("Execute", req.Context(), testify.Anything).Return(output, nil)
+
+		handler := web.NewWebAccountHandler(nil, nil, nil, usecase)
+
+		handler.Login(recorder, req)
+
+		assert.Equal(t, http.StatusOK, recorder.Code)
+	})
+
+	t.Run("Testing Login when occurs error on decode body", func(t *testing.T) {
+
+		req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer([]byte("invalid json")))
+
+		recorder := httptest.NewRecorder()
+
+		usecase := usecaseMock.NewLoginUseCaseMock()
+		handler := web.NewWebAccountHandler(nil, nil, nil, usecase)
+
+		handler.Login(recorder, req)
+
+		assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	})
+
+	t.Run("Testing Login when execute returns a error", func(t *testing.T) {
+
+		account := mock.CreateAccount()
+
+		input := usecase.NewLoginUseCaseInput(account.CPF, account.Secret, "")
+
+		jsonData, _ := json.Marshal(input)
+		req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonData))
+
+		recorder := httptest.NewRecorder()
+
+		output := usecase.NewLoginUseCaseOutput(&account, "")
+		usecase := usecaseMock.NewLoginUseCaseMock()
+		usecase.On("Execute", req.Context(), testify.Anything).Return(output, entity.NewErrorHandler(entity.INTERNAL_ERROR))
+
+		handler := web.NewWebAccountHandler(nil, nil, nil, usecase)
+
+		handler.Login(recorder, req)
+
 		assert.Equal(t, http.StatusInternalServerError, recorder.Code)
 	})
 }

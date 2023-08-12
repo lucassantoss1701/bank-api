@@ -21,6 +21,10 @@ func GetSQLFindAccountByID() string {
 	return "SELECT id, name, balance FROM account WHERE id = ?"
 }
 
+func GetSQLFindByCPF() string {
+	return "SELECT id, secret FROM account WHERE cpf = ?"
+}
+
 func GetSQLInsertAccount() string {
 	return regexp.QuoteMeta("INSERT INTO account (id, name, cpf, secret, balance, created_at) VALUES (?, ?, ?, ?, ?, ?)")
 }
@@ -176,7 +180,7 @@ func TestAccountRepository_FindByID(t *testing.T) {
 
 		account, err := accountRepository.FindByID(context.Background(), "2bd765a6-47bd-4731-9eb2-1e65542f4477")
 		assert.NotNil(t, err)
-		assert.Equal(t, "account not found: 2bd765a6-47bd-4731-9eb2-1e65542f4477", err.Error())
+		assert.Equal(t, "sql: no rows in result set", err.Error())
 		assert.Empty(t, account.ID)
 	})
 
@@ -319,4 +323,78 @@ func TestAccountRepository_UpdateBalance(t *testing.T) {
 		assert.Equal(t, accountName, updatedAccount.Name)
 		assert.Equal(t, newBalance, updatedAccount.Balance)
 	})
+}
+
+func TestAccountRepository_FindByCPF(t *testing.T) {
+
+	t.Run("Testing FindByCPF when returns one account", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.Nil(t, err)
+		defer db.Close()
+
+		accountRepository := database.NewAccountRepository(db)
+
+		rows := sqlmock.NewRows([]string{"id", "secret"}).
+			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "secret")
+
+		mock.ExpectQuery(GetSQLFindByCPF()).WithArgs("35768297090").WillReturnRows(rows)
+
+		account, err := accountRepository.FindByCPF(context.Background(), "35768297090")
+		assert.Nil(t, err)
+		assert.Equal(t, "2bd765a6-47bd-4731-9eb2-1e65542f4477", account.ID)
+		assert.Equal(t, "secret", account.Secret)
+	})
+
+	t.Run("Testing FindByID when execute returns an error", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.Nil(t, err)
+		defer db.Close()
+
+		accountRepository := database.NewAccountRepository(db)
+
+		mock.ExpectQuery(GetSQLFindByCPF()).WithArgs("35768297090").WillReturnError(errors.New("connection closed"))
+
+		account, err := accountRepository.FindByCPF(context.Background(), "35768297090")
+		assert.NotNil(t, err)
+		assert.Equal(t, "connection closed", err.Error())
+		assert.Empty(t, account.ID)
+
+	})
+
+	t.Run("Testing findByID when scan returns an error", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.Nil(t, err)
+		defer db.Close()
+
+		accountRepository := database.NewAccountRepository(db)
+
+		rows := sqlmock.NewRows([]string{"id", "secret"}).
+			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "secret").CloseError(errors.New("error on scan"))
+
+		mock.ExpectQuery(GetSQLFindByCPF()).WithArgs("35768297090").WillReturnRows(rows)
+
+		account, err := accountRepository.FindByCPF(context.Background(), "35768297090")
+		assert.NotNil(t, err)
+		assert.Equal(t, "error on scan", err.Error())
+		assert.Empty(t, account.ID)
+	})
+
+	t.Run("Testing findByID when scan returns an error (no rows)", func(t *testing.T) {
+		db, mock, err := sqlmock.New()
+		assert.Nil(t, err)
+		defer db.Close()
+
+		accountRepository := database.NewAccountRepository(db)
+
+		rows := sqlmock.NewRows([]string{"id", "secret"}).
+			AddRow("2bd765a6-47bd-4731-9eb2-1e65542f4477", "secret").CloseError(errors.New("sql: no rows in result set"))
+
+		mock.ExpectQuery(GetSQLFindByCPF()).WithArgs("35768297090").WillReturnRows(rows)
+
+		account, err := accountRepository.FindByCPF(context.Background(), "35768297090")
+		assert.NotNil(t, err)
+		assert.Equal(t, "sql: no rows in result set", err.Error())
+		assert.Empty(t, account.ID)
+	})
+
 }

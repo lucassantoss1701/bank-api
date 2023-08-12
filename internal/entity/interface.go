@@ -10,6 +10,7 @@ type AccountRepository interface {
 	FindByID(ctx context.Context, ID string) (Account, error)
 	Create(ctx context.Context, account *Account) (Account, error)
 	UpdateBalance(ctx context.Context, accountID string, newBalance int, tx ...TransactionHandler) (Account, error)
+	FindByCPF(ctx context.Context, CPF string) (Account, error)
 }
 
 type TransferRepository interface {

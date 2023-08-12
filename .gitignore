@@ -3,3 +3,4 @@ launch.json
 *.*.out
 /coverage
 *steps.txt
+*.env*

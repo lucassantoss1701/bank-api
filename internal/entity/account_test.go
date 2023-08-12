@@ -145,5 +145,29 @@ func TestAccount_NewAccount(t *testing.T) {
 
 		assert.Equal(t, "created at cannot be nil", err.Error())
 	})
+}
 
+func TestAccount_SecretIsCorrect(t *testing.T) {
+	t.Run("Testing SecretIsCorrect", func(t *testing.T) {
+		ID := "2bd765a6-47bd-4731-9eb2-1e65542f4477"
+		name := "lucas"
+		CPF := "35768297090"
+		secret := "4578405"
+		balance := 100
+		createdAt := time.Date(2023, 8, 5, 8, 22, 00, 00, time.UTC)
+		account, err := entity.NewAccount(ID, name, CPF, secret, balance, &createdAt)
+
+		assert.Nil(t, err)
+		assert.NotNil(t, account)
+
+		assert.Equal(t, ID, account.ID)
+		assert.Equal(t, name, account.Name)
+		assert.Equal(t, CPF, account.CPF)
+		assert.Equal(t, balance, account.Balance)
+		assert.Equal(t, &createdAt, account.CreatedAt)
+
+		result := account.SecretIsCorrect(secret)
+		assert.NotEqual(t, secret, account.Secret)
+		assert.True(t, result)
+	})
 }

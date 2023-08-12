@@ -19,8 +19,9 @@ import (
 
 type Handler struct {
 	http.HandlerFunc
-	method string
-	path   string
+	method  string
+	path    string
+	useAuth bool
 }
 
 type WebServer struct {
@@ -38,11 +39,12 @@ func NewWebServer(serverPort string) *WebServer {
 	}
 }
 
-func (s *WebServer) AddHandler(path string, method string, handler http.HandlerFunc) {
+func (s *WebServer) AddHandler(path string, method string, handler http.HandlerFunc, useAuth bool) {
 	s.Handlers = append(s.Handlers, Handler{
 		path:        path,
 		method:      method,
 		HandlerFunc: handler,
+		useAuth:     useAuth,
 	})
 }
 
@@ -97,7 +99,6 @@ func (s *WebServer) Stop() {
 
 func (s *WebServer) startCHI() {
 	s.Router.Use(middleware.Logger)
-	s.Router.Use(customMiddleware.Auth)
 
 	s.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		errorHandler := entity.NewErrorHandler(entity.NOT_FOUND_ERROR)
@@ -111,7 +112,29 @@ func (s *WebServer) startCHI() {
 		responses.Err(w, errorHandler)
 	})
 
+	var authHandlers []Handler
+	var noAuthHandlers []Handler
+
 	for _, handler := range s.Handlers {
-		s.Router.Method(handler.method, handler.path, handler.HandlerFunc)
+		if handler.useAuth {
+			authHandlers = append(authHandlers, handler)
+		} else {
+			noAuthHandlers = append(noAuthHandlers, handler)
+		}
+
 	}
+
+	s.Router.Group(func(r chi.Router) {
+		r.Use(customMiddleware.Auth)
+		for _, handler := range authHandlers {
+			r.Method(handler.method, handler.path, handler.HandlerFunc)
+		}
+	})
+
+	s.Router.Group(func(r chi.Router) {
+		for _, handler := range noAuthHandlers {
+			r.Method(handler.method, handler.path, handler.HandlerFunc)
+		}
+	})
+
 }

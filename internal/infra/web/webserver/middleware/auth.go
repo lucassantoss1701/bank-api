@@ -8,38 +8,36 @@ import (
 	"lucassantoss1701/bank/internal/infra/web"
 	"lucassantoss1701/bank/internal/infra/web/responses"
 	"net/http"
-	"strings"
 
 	"github.com/golang-jwt/jwt"
 )
 
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !strings.Contains(r.RequestURI, "/login") {
-			token := r.Header.Get("authorization")
 
-			claims, err := validateToken(token)
-			if err != nil {
-				message := err.Error()
-				err := entity.NewErrorHandler(entity.UNAUTHORIZED_ERROR)
-				err.Add(message)
-				responses.Err(w, err)
-				return
-			}
+		token := r.Header.Get("authorization")
 
-			accountID, err := getAccountID(claims)
-			if err != nil {
-				message := err.Error()
-				err := entity.NewErrorHandler(entity.UNAUTHORIZED_ERROR)
-				err.Add(message)
-				responses.Err(w, err)
-				return
-			}
-
-			ctx := context.WithValue(r.Context(), web.AccountIDKey, accountID)
-
-			next.ServeHTTP(w, r.WithContext(ctx))
+		claims, err := validateToken(token)
+		if err != nil {
+			message := err.Error()
+			err := entity.NewErrorHandler(entity.UNAUTHORIZED_ERROR)
+			err.Add(message)
+			responses.Err(w, err)
+			return
 		}
+
+		accountID, err := getAccountID(claims)
+		if err != nil {
+			message := err.Error()
+			err := entity.NewErrorHandler(entity.UNAUTHORIZED_ERROR)
+			err.Add(message)
+			responses.Err(w, err)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), web.AccountIDKey, accountID)
+		next.ServeHTTP(w, r.WithContext(ctx))
+
 	})
 }
 

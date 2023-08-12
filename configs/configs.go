@@ -30,7 +30,7 @@ type server struct {
 }
 
 type security struct {
-	Secret string `mapstructure:"SECRET"`
+	Secret string `mapstructure:"SECRET" default:""`
 }
 
 func getMappedEnvs(configStruct reflect.Type) []string {

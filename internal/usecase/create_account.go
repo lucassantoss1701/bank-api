@@ -35,7 +35,7 @@ func (c *CreateAccountUseCase) Execute(ctx context.Context, input *CreateAccount
 }
 
 type CreateAccountUseCaseInput struct {
-	ID        string     `json:"id"`
+	ID        string     `json:"-"`
 	Name      string     `json:"name"`
 	CPF       string     `json:"cpf"`
 	Secret    string     `json:"secret"`
@@ -43,11 +43,11 @@ type CreateAccountUseCaseInput struct {
 	CreatedAt *time.Time `json:"-"`
 }
 
-func NewCreateAccountUseCaseInput(ID, name, cpf, secret string, balance int, createdAt time.Time) *CreateAccountUseCaseInput {
+func NewCreateAccountUseCaseInput(ID, name, CPF, secret string, balance int, createdAt time.Time) *CreateAccountUseCaseInput {
 	return &CreateAccountUseCaseInput{
 		ID:        ID,
 		Name:      name,
-		CPF:       cpf,
+		CPF:       CPF,
 		Secret:    secret,
 		Balance:   balance,
 		CreatedAt: &createdAt,
@@ -58,7 +58,7 @@ type CreateAccountUseCaseOutput struct {
 	ID        string     `json:"id"`
 	Name      string     `json:"name"`
 	Balance   int        `json:"balance"`
-	CreatedAt *time.Time `json:"create_at"`
+	CreatedAt *time.Time `json:"created_at"`
 }
 
 func NewCreateAccountUseCaseOutput(ID string, name string, balance int, createdAt *time.Time) *CreateAccountUseCaseOutput {
