@@ -7,6 +7,7 @@ import (
 	"lucassantoss1701/bank/internal/entity/mock"
 	"lucassantoss1701/bank/internal/usecase"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestFindTransfersByAccountUseCase_Execute(t *testing.T) {
 
 		assert.Equal(t, transfers[0].ID, output[0].ID)
 		assert.Equal(t, transfers[0].Amount, output[0].Amount)
-		assert.Equal(t, transfers[0].CreatedAt, output[0].CreatedAt)
+		assert.Equal(t, transfers[0].CreatedAt.Format(time.RFC3339), output[0].CreatedAt)
 		assert.Equal(t, transfers[0].DestinationAccount.Name, output[0].DestinationAccount.Name)
 		assert.Equal(t, transfers[0].DestinationAccount.ID, output[0].DestinationAccount.ID)
 

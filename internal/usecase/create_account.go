@@ -55,10 +55,10 @@ func NewCreateAccountUseCaseInput(ID, name, CPF, secret string, balance int, cre
 }
 
 type CreateAccountUseCaseOutput struct {
-	ID        string     `json:"id"`
-	Name      string     `json:"name"`
-	Balance   int        `json:"balance"`
-	CreatedAt *time.Time `json:"created_at"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Balance   int    `json:"balance"`
+	CreatedAt string `json:"created_at"`
 }
 
 func NewCreateAccountUseCaseOutput(ID string, name string, balance int, createdAt *time.Time) *CreateAccountUseCaseOutput {
@@ -66,6 +66,6 @@ func NewCreateAccountUseCaseOutput(ID string, name string, balance int, createdA
 		ID:        ID,
 		Name:      name,
 		Balance:   balance,
-		CreatedAt: createdAt,
+		CreatedAt: createdAt.Format(time.RFC3339),
 	}
 }

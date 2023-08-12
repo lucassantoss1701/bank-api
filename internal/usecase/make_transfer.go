@@ -117,7 +117,7 @@ type MakeTransferUseCaseOutput struct {
 	Amount             int                        `json:"amount"`
 	OriginAccount      MakeTransferUseCaseAccount `json:"origin_account"`
 	DestinationAccount MakeTransferUseCaseAccount `json:"destination_account"`
-	CreatedAt          *time.Time                 `json:"created_at"`
+	CreatedAt          string                     `json:"created_at"`
 }
 
 type MakeTransferUseCaseAccount struct {
@@ -129,7 +129,7 @@ func NewMakeTransferUseCaseOutput(transfer *entity.Transfer) *MakeTransferUseCas
 	return &MakeTransferUseCaseOutput{
 		ID:        transfer.ID,
 		Amount:    transfer.Amount,
-		CreatedAt: transfer.CreatedAt,
+		CreatedAt: transfer.CreatedAt.Format(time.RFC3339),
 		OriginAccount: MakeTransferUseCaseAccount{
 			ID:   transfer.OriginAccount.ID,
 			Name: transfer.OriginAccount.Name,

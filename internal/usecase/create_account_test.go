@@ -7,6 +7,7 @@ import (
 	"lucassantoss1701/bank/internal/entity/mock"
 	"lucassantoss1701/bank/internal/usecase"
 	"testing"
+	"time"
 
 	testify "github.com/stretchr/testify/mock"
 
@@ -35,7 +36,7 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 		assert.Equal(t, account.ID, output.ID)
 		assert.Equal(t, account.Name, output.Name)
 		assert.Equal(t, account.Balance, output.Balance)
-		assert.Equal(t, account.CreatedAt, output.CreatedAt)
+		assert.Equal(t, account.CreatedAt.Format(time.RFC3339), output.CreatedAt)
 
 	})
 
