@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+type IFindTransfersByAccountUseCase interface {
+	Execute(ctx context.Context, input *FindTransfersByAccountUseCaseInput) ([]FindTransfersByAccountUseCaseOutput, error)
+}
+
 type FindTransfersByAccountUseCase struct {
 	repostiory entity.TransferRepository
 }
@@ -24,17 +28,7 @@ func (f *FindTransfersByAccountUseCase) Execute(ctx context.Context, input *Find
 
 	var output []FindTransfersByAccountUseCaseOutput
 	for _, transfer := range transfererences {
-		transferOutput := &FindTransfersByAccountUseCaseOutput{
-			ID:        transfer.ID,
-			Amount:    transfer.Amount,
-			CreatedAt: transfer.CreatedAt,
-			DestinationAccount: account{
-				ID:   transfer.DestinationAccount.ID,
-				Name: transfer.DestinationAccount.Name,
-			},
-		}
-
-		output = append(output, *transferOutput)
+		output = append(output, *NewFindTransfersByAccountUseCaseOutput(transfer))
 
 	}
 
@@ -66,4 +60,16 @@ type FindTransfersByAccountUseCaseOutput struct {
 type account struct {
 	ID   string
 	Name string
+}
+
+func NewFindTransfersByAccountUseCaseOutput(transfer entity.Transfer) *FindTransfersByAccountUseCaseOutput {
+	return &FindTransfersByAccountUseCaseOutput{
+		ID:        transfer.ID,
+		Amount:    transfer.Amount,
+		CreatedAt: transfer.CreatedAt,
+		DestinationAccount: account{
+			ID:   transfer.DestinationAccount.ID,
+			Name: transfer.DestinationAccount.Name,
+		},
+	}
 }

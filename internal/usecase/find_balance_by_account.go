@@ -5,6 +5,10 @@ import (
 	"lucassantoss1701/bank/internal/entity"
 )
 
+type IFindBalanceByAccountUseCase interface {
+	Execute(ctx context.Context, input *FindBalanceByAccountUseCaseInput) (*FindBalanceByAccountUseCaseOutput, error)
+}
+
 type FindBalanceByAccountUseCase struct {
 	repostiory entity.AccountRepository
 }
@@ -20,7 +24,7 @@ func (g *FindBalanceByAccountUseCase) Execute(ctx context.Context, input *FindBa
 	if err != nil {
 		return nil, err
 	}
-	return &FindBalanceByAccountUseCaseOutput{Balance: account.Balance}, nil
+	return NewFindBalanceByAccountUseCaseOutput(account.Balance), nil
 
 }
 
@@ -36,4 +40,10 @@ func NewFindBalanceByAccountUseCaseInput(id string) *FindBalanceByAccountUseCase
 
 type FindBalanceByAccountUseCaseOutput struct {
 	Balance int `json:"balance"`
+}
+
+func NewFindBalanceByAccountUseCaseOutput(balance int) *FindBalanceByAccountUseCaseOutput {
+	return &FindBalanceByAccountUseCaseOutput{
+		Balance: balance,
+	}
 }

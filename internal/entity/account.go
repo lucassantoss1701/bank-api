@@ -46,7 +46,7 @@ func NewAccount(ID string, name string, CPF string, secret string, balance int, 
 }
 
 func (a *Account) isValid() error {
-	validationError := &ErrorHandler{}
+	validationError := NewErrorHandler(ENTITY_ERROR)
 
 	if a.Name == "" {
 		validationError.Add("name cannot be empty")
@@ -69,7 +69,6 @@ func (a *Account) isValid() error {
 	}
 
 	if len(validationError.Messages) > 0 {
-		validationError.TypeError = ENTITY_ERROR
 		return validationError
 	}
 
@@ -81,7 +80,7 @@ func (a *Account) addFromBalance(value int) {
 }
 
 func (a *Account) removeFromBalance(value int) error {
-	validationError := &ErrorHandler{}
+	validationError := NewErrorHandler(ENTITY_ERROR)
 
 	a.Balance -= value
 

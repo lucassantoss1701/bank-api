@@ -100,21 +100,15 @@ func (s *WebServer) startCHI() {
 	s.Router.Use(customMiddleware.Auth)
 
 	s.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		var err error
-		var errorHandler entity.ErrorHandler
-		errorHandler.TypeError = entity.NOT_FOUND_ERROR
+		errorHandler := entity.NewErrorHandler(entity.NOT_FOUND_ERROR)
 		errorHandler.Add("route does not exist")
-		err = &errorHandler
-		responses.Err(w, err)
+		responses.Err(w, errorHandler)
 	})
 
 	s.Router.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
-		var err error
-		var errorHandler entity.ErrorHandler
-		errorHandler.TypeError = entity.NOT_ALLOWED_ERROR
+		errorHandler := entity.NewErrorHandler(entity.NOT_ALLOWED_ERROR)
 		errorHandler.Add("method is not valid")
-		err = &errorHandler
-		responses.Err(w, err)
+		responses.Err(w, errorHandler)
 	})
 
 	for _, handler := range s.Handlers {

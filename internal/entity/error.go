@@ -10,6 +10,7 @@ const (
 	INTERNAL_ERROR     TypeError = "internal error"
 	NOT_ALLOWED_ERROR  TypeError = "not allowed action"
 	UNAUTHORIZED_ERROR TypeError = "unauthorized action"
+	BAD_REQUEST        TypeError = "bad request"
 )
 
 type ErrorHandler struct {
@@ -23,8 +24,9 @@ func NewErrorHandler(typeError TypeError) *ErrorHandler {
 	}
 }
 
-func (e *ErrorHandler) Add(message string) {
+func (e *ErrorHandler) Add(message string) *ErrorHandler {
 	e.Messages = append(e.Messages, message)
+	return e
 }
 
 func (e *ErrorHandler) Error() string {

@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"lucassantoss1701/bank/internal/entity"
 )
 
@@ -30,7 +29,7 @@ func (r *TransferRepository) FindByAccountID(ctx context.Context, AccountID stri
 
 	rows, err := r.Db.QueryContext(ctx, query, AccountID, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 	defer rows.Close()
 
@@ -45,7 +44,7 @@ func (r *TransferRepository) FindByAccountID(ctx context.Context, AccountID stri
 			&destinationAccount.ID, &destinationAccount.Name,
 		)
 		if err != nil {
-			return nil, err
+			return nil, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 		}
 
 		transfer.OriginAccount = &originAccount
@@ -55,7 +54,7 @@ func (r *TransferRepository) FindByAccountID(ctx context.Context, AccountID stri
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 
 	return transfers, nil
@@ -78,16 +77,16 @@ func (r *TransferRepository) Create(ctx context.Context, transfer *entity.Transf
 		ctx, query, transfer.ID, transfer.OriginAccount.ID, transfer.DestinationAccount.ID, transfer.Amount, transfer.CreatedAt,
 	)
 	if err != nil {
-		return entity.Transfer{}, err
+		return entity.Transfer{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 
 	affectedRows, err := result.RowsAffected()
 	if err != nil {
-		return entity.Transfer{}, err
+		return entity.Transfer{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 
 	if affectedRows != 1 {
-		return entity.Transfer{}, errors.New("unexpected number of affected rows")
+		return entity.Transfer{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add("unexpected number of affected rows")
 	}
 
 	return *transfer, nil

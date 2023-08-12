@@ -24,7 +24,7 @@ func (r *AccountRepository) Find(ctx context.Context, limit, offset int) ([]enti
 
 	rows, err := r.Db.QueryContext(ctx, query)
 	if err != nil {
-		return nil, err
+		return nil, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 	defer rows.Close()
 
@@ -49,7 +49,7 @@ func (r *AccountRepository) FindByID(ctx context.Context, ID string) (entity.Acc
 		if err.Error() == sql.ErrNoRows.Error() {
 			return entity.Account{}, fmt.Errorf("account not found: %s", ID)
 		}
-		return entity.Account{}, err
+		return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(err.Error())
 	}
 
 	return account, nil
@@ -61,7 +61,7 @@ func (r *AccountRepository) Create(ctx context.Context, account *entity.Account)
 
 	_, err := r.Db.ExecContext(ctx, query, account.ID, account.Name, account.CPF, account.Secret, account.Balance, account.CreatedAt)
 	if err != nil {
-		return entity.Account{}, err
+		return entity.Account{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 
 	return *account, nil
@@ -79,7 +79,7 @@ func (r *AccountRepository) UpdateBalance(ctx context.Context, accountID string,
 
 	_, err := executor.ExecContext(ctx, query, newBalance, accountID)
 	if err != nil {
-		return entity.Account{}, err
+		return entity.Account{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
 
 	return r.FindByID(ctx, accountID)

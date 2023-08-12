@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+type IMakeTransferUseCase interface {
+	Execute(ctx context.Context, input *MakeTransferUseCaseInput) (*MakeTransferUseCaseOutput, error)
+}
+
 type MakeTransferUseCase struct {
 	accountRepository  entity.AccountRepository
 	transferRepository entity.TransferRepository
@@ -74,19 +78,10 @@ func (m *MakeTransferUseCase) Execute(ctx context.Context, input *MakeTransferUs
 		return nil, err
 	}
 
-	output := &MakeTransferUseCaseOutput{
-		ID:        createdTransfer.ID,
-		Amount:    createdTransfer.Amount,
-		CreatedAt: createdTransfer.CreatedAt,
-		OriginAccount: MakeTransferUseCaseAccount{
-			ID:   createdTransfer.OriginAccount.ID,
-			Name: createdTransfer.OriginAccount.Name,
-		},
-		DestinationAccount: MakeTransferUseCaseAccount{
-			ID:   destinationAccount.ID,
-			Name: destinationAccount.Name,
-		},
-	}
+	createdTransfer.OriginAccount = &originAccount
+	createdTransfer.DestinationAccount = &destinationAccount
+
+	output := NewMakeTransferUseCaseOutput(&createdTransfer)
 
 	return output, nil
 }
@@ -128,4 +123,20 @@ type MakeTransferUseCaseOutput struct {
 type MakeTransferUseCaseAccount struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+}
+
+func NewMakeTransferUseCaseOutput(transfer *entity.Transfer) *MakeTransferUseCaseOutput {
+	return &MakeTransferUseCaseOutput{
+		ID:        transfer.ID,
+		Amount:    transfer.Amount,
+		CreatedAt: transfer.CreatedAt,
+		OriginAccount: MakeTransferUseCaseAccount{
+			ID:   transfer.OriginAccount.ID,
+			Name: transfer.OriginAccount.Name,
+		},
+		DestinationAccount: MakeTransferUseCaseAccount{
+			ID:   transfer.DestinationAccount.ID,
+			Name: transfer.DestinationAccount.Name,
+		},
+	}
 }
