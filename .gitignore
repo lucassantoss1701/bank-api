@@ -4,3 +4,4 @@ launch.json
 /coverage
 *steps.txt
 *.env*
+*.docker

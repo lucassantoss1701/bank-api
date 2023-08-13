@@ -10,8 +10,8 @@ import (
 	"github.com/golang-migrate/migrate/source/file"
 )
 
-func Connect(user, pass, host, port, name string) *sql.DB {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, pass, host, port, name))
+func Connect(dbType, user, pass, host, port, name string) *sql.DB {
+	db, err := sql.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, pass, host, port, name))
 	if err != nil {
 		panic(err)
 	}
@@ -20,7 +20,7 @@ func Connect(user, pass, host, port, name string) *sql.DB {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Conexão com o banco de dados MySQL estabelecida com sucesso!")
+	fmt.Println("Connection to MySQL database successfully established!")
 
 	return db
 }
@@ -44,6 +44,6 @@ func Migrate(db *sql.DB) {
 	}
 
 	if err := m.Up(); err != nil {
-		fmt.Println("no change")
+		fmt.Println("No database changes")
 	}
 }

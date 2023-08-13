@@ -26,7 +26,7 @@ func (f *FindTransfersByAccountUseCase) Execute(ctx context.Context, input *Find
 		return nil, err
 	}
 
-	var output []FindTransfersByAccountUseCaseOutput
+	output := []FindTransfersByAccountUseCaseOutput{}
 	for _, transfer := range transfererences {
 		output = append(output, *NewFindTransfersByAccountUseCaseOutput(transfer))
 

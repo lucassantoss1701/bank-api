@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bank
+      MYSQL_PASSWORD: root
+    networks:
+      - bank-network
+    ports:
+      - "3307:3306"
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+      - ./internal/infra/database/migrations/init:/docker-entrypoint-initdb.d
+
+  bank-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bank-api
+    entrypoint: ["bash", "-c", "./wait-for-services.sh && ./server"]
+    ports:
+      - "8000:8000"
+    networks:
+      - bank-network
+    environment:
+      - DB_TYPE=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=bank
+      - SERVER_PORT=8000
+      - SECRET=xpto
+    depends_on:
+            - db
+
+networks: 
+    bank-network:
+        driver: bridge 

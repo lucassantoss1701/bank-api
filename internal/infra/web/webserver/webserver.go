@@ -97,7 +97,6 @@ func (s *WebServer) Stop() {
 }
 
 func (s *WebServer) startCHI() {
-	// s.Router.Use(middleware.Logger)
 	s.Router.Use(customMiddleware.Logger)
 
 	s.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
