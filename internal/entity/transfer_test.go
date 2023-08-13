@@ -170,7 +170,7 @@ func TestTransfer_MakeTransfer(t *testing.T) {
 
 		err = transfer.MakeTransfer()
 		assert.NotNil(t, err)
-		assert.Equal(t, "error on update balance of origin account: new balance cannot be minor than 0", err.Error())
+		assert.Equal(t, "error on update balance of origin account: new balance cannot be minor than 0(insufficient balance)", err.Error())
 	})
 
 	t.Run("Testing MakeTransfer when transfer cannot be performed with success(origin account is equal destination account)", func(t *testing.T) {

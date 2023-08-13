@@ -82,13 +82,12 @@ func (a *Account) addFromBalance(value int) {
 }
 
 func (a *Account) removeFromBalance(value int) error {
-	validationError := NewErrorHandler(ENTITY_ERROR)
+	validationError := NewErrorHandler(BAD_REQUEST)
 
 	a.Balance -= value
 
 	if a.Balance < 0 {
-		validationError.Add("new balance cannot be minor than 0")
-		validationError.TypeError = ENTITY_ERROR
+		validationError.Add("new balance cannot be minor than 0(insufficient balance)")
 		return validationError
 	}
 

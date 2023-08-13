@@ -197,7 +197,7 @@ func TestMakeTransferUseCase_Execute(t *testing.T) {
 
 		assert.NotNil(t, err)
 		assert.Nil(t, output)
-		assert.Equal(t, "error on update balance of origin account: new balance cannot be minor than 0", err.Error())
+		assert.Equal(t, "error on update balance of origin account: new balance cannot be minor than 0(insufficient balance)", err.Error())
 
 		accountRepository.AssertCalled(t, "FindByID", ctx, originAccount.ID)
 		accountRepository.AssertCalled(t, "FindByID", ctx, destinationAccount.ID)
