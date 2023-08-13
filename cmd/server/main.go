@@ -19,7 +19,7 @@ func init() {
 }
 
 func main() {
-	db := connection.Connect(configs.Get().Database.User, configs.Get().Database.Pass, configs.Get().Database.Host, configs.Get().Database.Port, configs.Get().Database.Name)
+	db := connection.Connect(configs.Get().Database.Type, configs.Get().Database.User, configs.Get().Database.Pass, configs.Get().Database.Host, configs.Get().Database.Port, configs.Get().Database.Name)
 	defer db.Close()
 
 	connection.Migrate(db)

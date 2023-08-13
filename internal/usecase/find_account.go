@@ -26,7 +26,7 @@ func (f *FindAccountUseCase) Execute(ctx context.Context, input *FindAccountUseC
 		return nil, err
 	}
 
-	var output []FindAccountUseCaseOutput
+	output := []FindAccountUseCaseOutput{}
 
 	for _, account := range accounts {
 
