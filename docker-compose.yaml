@@ -12,7 +12,7 @@ services:
     networks:
       - bank-network
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - .docker/mysql:/var/lib/mysql
       - ./internal/infra/database/migrations/init:/docker-entrypoint-initdb.d
@@ -37,7 +37,7 @@ services:
       - SERVER_PORT=8000
       - SECRET=xpto
     depends_on:
-            - db
+      - db
 
 networks: 
     bank-network:

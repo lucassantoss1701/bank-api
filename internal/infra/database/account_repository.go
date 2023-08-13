@@ -48,7 +48,7 @@ func (r *AccountRepository) FindByID(ctx context.Context, ID string) (entity.Acc
 	err := row.Scan(&account.ID, &account.Name, &account.Balance)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(err.Error())
+			return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(fmt.Sprintf("not found account: %s", ID))
 		}
 		return entity.Account{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}
@@ -98,7 +98,7 @@ func (r *AccountRepository) FindByCPF(ctx context.Context, CPF string) (entity.A
 	err := row.Scan(&account.ID, &account.Secret)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(err.Error())
+			return entity.Account{}, entity.NewErrorHandler(entity.NOT_FOUND_ERROR).Add(fmt.Sprintf("not found account by CPF: %s", CPF))
 		}
 		return entity.Account{}, entity.NewErrorHandler(entity.INTERNAL_ERROR).Add(err.Error())
 	}

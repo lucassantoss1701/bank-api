@@ -8,6 +8,7 @@ import (
 	"lucassantoss1701/bank/internal/infra/web"
 	"lucassantoss1701/bank/internal/infra/web/responses"
 	"net/http"
+	"strings"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -52,6 +53,13 @@ func validateToken(token string) (jwt.MapClaims, error) {
 	if token == "" {
 		return nil, errors.New("token must not be empty")
 	}
+
+	authParts := strings.SplitN(token, " ", 2)
+	if len(authParts) != 2 || strings.ToLower(authParts[0]) != "bearer" {
+		return nil, errors.New("token is invalid")
+	}
+
+	token = authParts[1]
 
 	claims, err := parseToken(token)
 	if err != nil {

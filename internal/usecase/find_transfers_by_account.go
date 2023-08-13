@@ -58,8 +58,8 @@ type FindTransfersByAccountUseCaseOutput struct {
 }
 
 type account struct {
-	ID   string
-	Name string
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 func NewFindTransfersByAccountUseCaseOutput(transfer entity.Transfer) *FindTransfersByAccountUseCaseOutput {

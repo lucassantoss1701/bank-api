@@ -184,7 +184,7 @@ func TestAccountRepository_FindByID(t *testing.T) {
 
 		account, err := accountRepository.FindByID(context.Background(), "2bd765a6-47bd-4731-9eb2-1e65542f4477")
 		assert.NotNil(t, err)
-		assert.Equal(t, "sql: no rows in result set", err.Error())
+		assert.Equal(t, "not found account: 2bd765a6-47bd-4731-9eb2-1e65542f4477", err.Error())
 		assert.Empty(t, account.ID)
 	})
 
@@ -397,7 +397,7 @@ func TestAccountRepository_FindByCPF(t *testing.T) {
 
 		account, err := accountRepository.FindByCPF(context.Background(), "35768297090")
 		assert.NotNil(t, err)
-		assert.Equal(t, "sql: no rows in result set", err.Error())
+		assert.Equal(t, "not found account by CPF: 35768297090", err.Error())
 		assert.Empty(t, account.ID)
 	})
 
