@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 
 	"lucassantoss1701/bank/internal/entity"
@@ -33,6 +34,11 @@ func getLoggerInstance() *logrus.Logger {
 
 func Logger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "swagger") {
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		uuid := entity.NewUUID()
 
 		bodyCopy, _ := io.ReadAll(r.Body)
