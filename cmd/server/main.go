@@ -18,6 +18,13 @@ func init() {
 	configs.Load()
 }
 
+// @title Bank API
+// @version 1.0
+// @description This API aims to provide resources for common operations that occur within a bank.
+// @BasePath /
+// @securityDefinitions.apiKey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	db := connection.Connect(configs.Get().Database.Type, configs.Get().Database.User, configs.Get().Database.Pass, configs.Get().Database.Host, configs.Get().Database.Port, configs.Get().Database.Name)
 	defer db.Close()

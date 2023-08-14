@@ -29,6 +29,14 @@ func NewWebAccountHandler(createAccount usecase.ICreateAccountUseCase, findAccou
 	}
 }
 
+// @Summary     Create
+// @Description Create account
+// @Tags        accounts
+// @Produce     json
+// @Param       body body usecase.CreateAccountUseCaseInput true "create account request vody"
+// @Success     201 {object} usecase.CreateAccountUseCaseOutput
+// @Failure     400,401,404,500,422
+// @Router /accounts [post]
 func (h *WebAccountHandler) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -51,6 +59,16 @@ func (h *WebAccountHandler) Create(w http.ResponseWriter, r *http.Request) {
 	responses.Success(w, http.StatusCreated, output)
 }
 
+// @Summary     Find
+// @Description Find accounts by param
+// @Tags        accounts
+// @Produce     json
+// @Param       limit query int false "number of items to be returned per page"
+// @Param       offset query int false "page offset"
+// @Success     200 {array} usecase.FindAccountUseCaseOutput
+// @Failure     400,401,404,500
+// @Security    ApiKeyAuth
+// @Router /accounts [get]
 func (h *WebAccountHandler) Find(w http.ResponseWriter, r *http.Request) {
 	var err error
 	ctx := r.Context()
@@ -89,6 +107,15 @@ func (h *WebAccountHandler) Find(w http.ResponseWriter, r *http.Request) {
 	responses.Success(w, http.StatusOK, output)
 }
 
+// @Summary     Find
+// @Description Find balance of a specific accounts
+// @Tags        accounts
+// @Produce     json
+// @Success     200 {array} usecase.FindBalanceByAccountUseCaseOutput
+// @Param       account_id path string true "account_id"
+// @Failure     400,401,404,500
+// @Security    ApiKeyAuth
+// @Router /accounts/{account_id}/balance [get]
 func (h *WebAccountHandler) FindBalanceByAccount(w http.ResponseWriter, r *http.Request) {
 	var err error
 	ctx := r.Context()
@@ -105,6 +132,14 @@ func (h *WebAccountHandler) FindBalanceByAccount(w http.ResponseWriter, r *http.
 	responses.Success(w, http.StatusOK, output)
 }
 
+// @Summary     Login
+// @Description Login checks that the user can use the API and returns a token
+// @Tags        accounts
+// @Produce     json
+// @Param       body body usecase.LoginUseCaseInput true "login request body"
+// @Success     200 {object} usecase.LoginUseCaseOutput
+// @Failure     400,401,404,500
+// @Router /login [post]
 func (h *WebAccountHandler) Login(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

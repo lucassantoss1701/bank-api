@@ -26,6 +26,15 @@ func NewWebTransferHandler(makeTransfer usecase.IMakeTransferUseCase, findTransf
 	}
 }
 
+// @Summary     Create transfer
+// @Description Create transfer between two accounts
+// @Tags        transfers
+// @Produce     json
+// @Param       body body usecase.MakeTransferUseCaseInput true "make transfer request body"
+// @Success     201 {object} usecase.MakeTransferUseCaseOutput
+// @Failure     400,401,404,500,422
+// @Security    ApiKeyAuth
+// @Router /transfers [post]
 func (h *WebTransferHandler) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -54,6 +63,16 @@ func (h *WebTransferHandler) Create(w http.ResponseWriter, r *http.Request) {
 	responses.Success(w, http.StatusCreated, output)
 }
 
+// @Summary     Find transfers by account
+// @Description Find transfers from an account(user needs to be authenticated)
+// @Tags        transfers
+// @Produce     json
+// @Param       limit query int false "number of items to be returned per page"
+// @Param       offset query int false "page offset"
+// @Success     200 {array} usecase.MakeTransferUseCaseOutput
+// @Failure     400,401,404,500
+// @Security    ApiKeyAuth
+// @Router /transfers [get]
 func (h *WebTransferHandler) FindByAccountID(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

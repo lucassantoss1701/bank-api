@@ -1,8 +1,11 @@
 FROM golang:1.19-alpine as builder
 
 RUN apk add --no-cache git
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
 WORKDIR /build
 COPY . .
+RUN swag init -g ./cmd/server/main.go .
 RUN go build -o server ./cmd/server/main.go
 
 FROM alpine:3.14

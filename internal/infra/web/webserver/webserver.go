@@ -11,9 +11,13 @@ import (
 	"syscall"
 	"time"
 
+	httpSwagger "github.com/swaggo/http-swagger"
+
 	customMiddleware "lucassantoss1701/bank/internal/infra/web/webserver/middleware"
 
 	"github.com/go-chi/chi/v5"
+
+	_ "lucassantoss1701/bank/docs"
 )
 
 type Handler struct {
@@ -135,5 +139,7 @@ func (s *WebServer) startCHI() {
 			r.Method(handler.method, handler.path, handler.HandlerFunc)
 		}
 	})
+
+	s.Router.Get("/swagger/*", httpSwagger.Handler())
 
 }
