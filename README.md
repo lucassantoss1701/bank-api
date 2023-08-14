@@ -67,7 +67,11 @@ $ go test ./...
 make tests
 ```
 
-## 🕹 Rotas
+---
+## Open API: http://localhost:8000/swagger/
+---
+
+## 🕹 Rotas 
 
 
 ### POST - /login
