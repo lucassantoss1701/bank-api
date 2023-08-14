@@ -29,7 +29,7 @@ func NewWebAccountHandler(createAccount usecase.ICreateAccountUseCase, findAccou
 	}
 }
 
-// @Summary     Create
+// @Summary     Create account
 // @Description Create account
 // @Tags        accounts
 // @Produce     json
@@ -59,7 +59,7 @@ func (h *WebAccountHandler) Create(w http.ResponseWriter, r *http.Request) {
 	responses.Success(w, http.StatusCreated, output)
 }
 
-// @Summary     Find
+// @Summary     Find accounts
 // @Description Find accounts by param
 // @Tags        accounts
 // @Produce     json
@@ -107,7 +107,7 @@ func (h *WebAccountHandler) Find(w http.ResponseWriter, r *http.Request) {
 	responses.Success(w, http.StatusOK, output)
 }
 
-// @Summary     Find
+// @Summary     Find balance
 // @Description Find balance of a specific accounts
 // @Tags        accounts
 // @Produce     json
